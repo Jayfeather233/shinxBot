@@ -8,9 +8,10 @@ import java.util.Random;
 
 public class pokeMain implements EventProcessable {
     Random R = new Random();
+
     @Override
     public void process(JSONObject J) {
-        if(J.containsKey("group_id")) {
+        if (J.containsKey("group_id")) {
             Main.setNextSender("group", 0, J.getLong("group_id"), "[CQ:poke,qq=" + J.getLong("user_id") + "]");
             if (R.nextInt(3) == 1)
                 Main.setNextSender("group", 0, J.getLong("group_id"), "别戳我TAT");

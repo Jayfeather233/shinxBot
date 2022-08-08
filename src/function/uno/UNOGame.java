@@ -1,18 +1,20 @@
 package function.uno;
 
-import main.Main;
 import com.alibaba.fastjson.JSONObject;
+import main.Main;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 import java.util.List;
+import java.util.Random;
 
 public class UNOGame implements Runnable {
     private static final int CARDS_LENGTH = 108;
     public final long gameID;
     final String[] color;
     final String[] name;
+    private final List<Long> playerID;
+    private final List<List<Integer>> playerCards;
     boolean hasNextInput = false;
     boolean isEnd = false;
     boolean colorChoosing = false;
@@ -20,11 +22,9 @@ public class UNOGame implements Runnable {
     boolean isDrawn = false;
     String nextInput;
     long nextID;
-    private final List<Long> playerID;
     private int[] cards;
     private int top;
     private int order;
-    private final List<List<Integer>> playerCards;
     private boolean isBegin = false;
     private int lastCard;
     private int nextColor = -1;
@@ -115,7 +115,7 @@ public class UNOGame implements Runnable {
     }
 
     private void sendAllMsg(String msg) {
-        for(long ID : playerID) {
+        for (long ID : playerID) {
             JSONObject J = new JSONObject();
             J.put("user_id", ID);
             J.put("message", msg);

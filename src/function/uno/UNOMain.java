@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static main.Main.*;
+import static main.Main.getFriendSet;
+import static main.Main.setNextSender;
 
 public class UNOMain implements Processable {
     private static final Map<Long, UNOGame> unoGameMap = new HashMap<>();
@@ -28,10 +29,10 @@ public class UNOMain implements Processable {
 
     public void process(String message_type, String message, long group_id, long user_id) {
         message = message.toLowerCase();
-        if(!message.startsWith("uno.") && unoIDMap.containsKey(user_id)){
+        if (!message.startsWith("uno.") && unoIDMap.containsKey(user_id)) {
             message = "uno.play " + message;
         }
-        if(message.startsWith("uno.")) message = message.substring(3);
+        if (message.startsWith("uno.")) message = message.substring(3);
         if (message.equals(".help")) {
             setNextSender(message_type, user_id, group_id, "uno.new 创建一个群UNO游戏\nuno.join 加入当前群游戏\nuno.leave 离开\nuno.start 开始\nuno.order 出牌顺序\nuno.resend 重新发送消息\nuno.help 帮助");
             return;

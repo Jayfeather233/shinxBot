@@ -2,8 +2,11 @@ package function.deliver;
 
 import main.Processable;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 import static main.Main.setNextSender;
 
@@ -16,8 +19,8 @@ class DeliverItemInfo {
 public class DeliverMain implements Processable {
     private final DeliverItemInfo[] diiArray = new DeliverItemInfo[100];
     private final Random R = new Random();
+    private final String[][] times = {{"零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"}, {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}};
     private int totalPoss = 0;
-    private final String[][] times = {{"零","一","二","三","四","五","六","七","八","九","十"},{"0","1","2","3","4","5","6","7","8","9","10"}};
 
     public DeliverMain() {
         try {
@@ -55,17 +58,17 @@ public class DeliverMain implements Processable {
 
     public void process(String message_type, String message, long group_id, long user_id) {
         int t;
-        if(message.contains(times[0][10])||message.contains(times[1][10])) t=11;
-        else{
+        if (message.contains(times[0][10]) || message.contains(times[1][10])) t = 11;
+        else {
             t = 0;
-            for(int i=1;i<10;i++){
-                if(message.contains(times[0][i])||message.contains(times[1][i])){
-                    t=i;
+            for (int i = 1; i < 10; i++) {
+                if (message.contains(times[0][i]) || message.contains(times[1][i])) {
+                    t = i;
                     break;
                 }
             }
         }
-        if(t == 0) return;
+        if (t == 0) return;
 
         ArrayList<DeliverItemInfo> deliverItemArray = getDeliverItem(t);
 
@@ -78,7 +81,7 @@ public class DeliverMain implements Processable {
             }
             output.append(u.name).append('\n');
         }
-        setNextSender(message_type, user_id, group_id, output.substring(0,output.length()-1));
+        setNextSender(message_type, user_id, group_id, output.substring(0, output.length() - 1));
     }
 
     @Override

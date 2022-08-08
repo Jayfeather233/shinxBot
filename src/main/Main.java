@@ -1,5 +1,7 @@
 package main;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import event.friendadd.friendAddMain;
 import event.groupmemberchange.MemberChangeMain;
 import event.poke.pokeMain;
@@ -7,28 +9,28 @@ import function.auto114514.Auto114514Main;
 import function.autoForwardGenerator.AutoForwardGeneratorMain;
 import function.autoreply.AutoReplyMain;
 import function.compiler.compilerMain;
+import function.deliver.DeliverMain;
 import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
-import function.imageGenerator.ImageGeneratorMain;
-import function.deliver.DeliverMain;
 import function.guess.GuessGameMain;
+import function.imageGenerator.ImageGeneratorMain;
 import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 
 public class Main {
-    public static int sendPort;
-    public static int receivePort;
-    public static long botQQ;
     private static final Set<Long> friendSet = new HashSet<>();
     private static final Map<Long, String> userName = new HashMap<>();
     private static final ArrayList<Processable> features = new ArrayList<>();
     private static final ArrayList<EventProcessable> events = new ArrayList<>();
+    public static int sendPort;
+    public static int receivePort;
+    public static long botQQ;
 
     public static Set<Long> getFriendSet() {
         return friendSet;
@@ -79,30 +81,14 @@ public class Main {
                     J.put("message", "中文测试[t]");
                     setNextSender("send_group_msg", J);
                 }
-            } else if (message.contains("蒙德里安")) {
-                if (message_type.equals("group")) {
-                    JSONObject J = new JSONObject();
-                    J.put("group_id", group_id);
-                    J.put("message", "啊对对对");
-                    setNextSender("send_group_msg", J);
-                }
-            } else if (message.indexOf("mget") == 0) {
-                if (message_type.equals("group")) {
-                    if (group_id == 1011383394) {
-                        JSONObject J = new JSONObject();
-                        J.put("group_id", group_id);
-                        J.put("message", "<来点w fav:jayfeather233" + message.substring(4));
-                        setNextSender("send_group_msg", J);
-                    }
-                }
             } else if (message.equals("bot.help")) {
                 StringBuilder sb = new StringBuilder();
                 for (Processable game : features) {
-                    if(game.help()!=null)
+                    if (game.help() != null)
                         sb.append(game.help()).append('\n');
                 }
                 sb.append("本Bot项目地址：https://github.com/Jayfeather233/shinxBot");
-                Main.setNextSender(message_type,user_id,group_id, String.valueOf(sb));
+                Main.setNextSender(message_type, user_id, group_id, String.valueOf(sb));
             } else {
                 for (Processable game : features) {
                     if (game.check(message_type, message, group_id, user_id)) {

@@ -8,12 +8,12 @@ import java.util.Scanner;
 import static main.Main.setNextSender;
 
 public class InputProcess implements Runnable {
-    public void run(){
-        Scanner S=new Scanner(System.in);
+    public void run() {
+        Scanner S = new Scanner(System.in);
         String comma;
         StringBuilder mess;
-        while(true){
-            comma=S.next();
+        while (true) {
+            comma = S.next();
             mess = new StringBuilder(S.next());
             switch (comma) {
                 case "image", "img" -> {

@@ -13,12 +13,13 @@ public class compilerMain implements Processable {
 
     private String clientId;
     private String clientSecret;
-    public compilerMain(){
+
+    public compilerMain() {
         try {
             FileReader f = new FileReader("compilerKey.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
-            while(S.hasNextLine()) sb.append(S.nextLine());
+            while (S.hasNextLine()) sb.append(S.nextLine());
             JSONObject J = JSONObject.parseObject(sb.toString());
             clientId = J.getString("clientId");
             clientSecret = J.getString("clientSecret");
@@ -34,7 +35,7 @@ public class compilerMain implements Processable {
                         }""");
                 bw.close();
                 fw.close();
-            } catch (IOException ee){
+            } catch (IOException ee) {
                 System.out.println("文件读写出错");
             }
         }
@@ -47,13 +48,13 @@ public class compilerMain implements Processable {
         language = language.toLowerCase();
         String ttmp;
         StringBuilder code = new StringBuilder();
-        while(S.hasNextLine()){
+        while (S.hasNextLine()) {
             ttmp = S.nextLine();
-            if(ttmp.equals("输入")) break;
+            if (ttmp.equals("输入")) break;
             code.append(ttmp).append('\n');
         }
         StringBuilder inp = new StringBuilder();
-        while(S.hasNextLine()){
+        while (S.hasNextLine()) {
             inp.append(S.nextLine()).append('\n');
         }
 
@@ -78,21 +79,21 @@ public class compilerMain implements Processable {
         }
 
         JSONObject J = new JSONObject();
-        J.put("clientId",clientId);
-        J.put("clientSecret",clientSecret);
-        J.put("script",script);
-        J.put("language",language);
-        J.put("versionIndex",versionIndex);
-        if(inp.length()!=0) J.put("stdin",inp);
+        J.put("clientId", clientId);
+        J.put("clientSecret", clientSecret);
+        J.put("script", script);
+        J.put("language", language);
+        J.put("versionIndex", versionIndex);
+        if (inp.length() != 0) J.put("stdin", inp);
 
         J = JSONObject.parseObject(Objects.requireNonNull(HttpURLConnectionUtil.doPost("https://api.jdoodle.com/v1/execute", J)).toString());
 
-        if(J.containsKey("error")){
-            Main.setNextSender(message_type,user_id,group_id,J.getString("error"));
+        if (J.containsKey("error")) {
+            Main.setNextSender(message_type, user_id, group_id, J.getString("error"));
         } else {
-            Main.setNextSender(message_type,user_id,group_id,
+            Main.setNextSender(message_type, user_id, group_id,
                     "输出：" + J.getString("output") + '\n'
-                    + "内存："+ J.getString("memory") + '\n'
+                            + "内存：" + J.getString("memory") + '\n'
                             + "CPU时间：" + J.getString("cpuTime"));
         }
     }

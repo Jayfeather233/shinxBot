@@ -14,7 +14,7 @@ public class GetImage2DMain implements Processable {
         try {
             JSONObject J = JSONObject.parseObject(HttpURLConnectionUtil.doGet("https://www.dmoe.cc/random.php?return=json"));
             Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=" + J.getString("imgurl") + ",id=40000]");
-        }catch(SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
             Main.setNextSender(message_type, user_id, group_id, "网站链接超时");
         }
     }

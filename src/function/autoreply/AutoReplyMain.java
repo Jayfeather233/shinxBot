@@ -1,8 +1,8 @@
 package function.autoreply;
 
 import com.alibaba.fastjson.JSONObject;
-import main.Processable;
 import main.Main;
+import main.Processable;
 
 import java.io.*;
 import java.util.Scanner;
@@ -12,11 +12,11 @@ public class AutoReplyMain implements Processable {
     JSONObject replyData = new JSONObject();
 
 
-    public AutoReplyMain (){
+    public AutoReplyMain() {
         try {
             File ff = new File("replydata.json");
-            if(!ff.exists()){
-                if(!ff.createNewFile()) System.out.println("自动回复文件创建失败");
+            if (!ff.exists()) {
+                if (!ff.createNewFile()) System.out.println("自动回复文件创建失败");
                 else {
                     FileWriter fw = new FileWriter(ff);
                     fw.write("{}");
@@ -37,14 +37,15 @@ public class AutoReplyMain implements Processable {
             e.printStackTrace();
         }
     }
+
     private void save() {
-        try{
+        try {
             FileWriter fw = new FileWriter("replydata.json", false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(replyData.toString());
             bw.close();
             fw.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("文件读写出错");
         }
     }
@@ -52,35 +53,35 @@ public class AutoReplyMain implements Processable {
     @Override
     public void process(String message_type, String message, long group_id, long user_id) {
         message = message.substring(2).trim();
-        if(message.startsWith("添加") && (user_id == ((long)34258)*100000+11925 || user_id == 1826559889)){
+        if (message.startsWith("添加") && (user_id == ((long) 34258) * 100000 + 11925 || user_id == 1826559889)) {
             message = message.substring(2).trim();
             Scanner S = new Scanner(message);
             String key = S.next();
             String ans = S.next();
-            if(S.hasNext()) ans= ans + S.nextLine();
-            replyData.put(key,ans);
+            if (S.hasNext()) ans = ans + S.nextLine();
+            replyData.put(key, ans);
             save();
-            Main.setNextSender(message_type,user_id,group_id,"添加成功");
-        } else if(message.startsWith("删除") && (user_id == ((long)34258)*100000+11925 || user_id == 1826559889)){
+            Main.setNextSender(message_type, user_id, group_id, "添加成功");
+        } else if (message.startsWith("删除") && (user_id == ((long) 34258) * 100000 + 11925 || user_id == 1826559889)) {
             message = message.substring(2).trim();
-            if(replyData.containsKey(message)){
+            if (replyData.containsKey(message)) {
                 replyData.remove(message);
                 save();
-                Main.setNextSender(message_type,user_id,group_id,"删除成功");
+                Main.setNextSender(message_type, user_id, group_id, "删除成功");
             } else {
-                Main.setNextSender(message_type,user_id,group_id,"未找到");
+                Main.setNextSender(message_type, user_id, group_id, "未找到");
             }
-        } else if(message.equals("帮助")) {
+        } else if (message.equals("帮助")) {
             StringBuilder sb = new StringBuilder("##帮助\n");
             for (String u : replyData.keySet()) {
                 sb.append("##").append(u).append('\n');
             }
-            Main.setNextSender(message_type,user_id,group_id,sb.toString());
+            Main.setNextSender(message_type, user_id, group_id, sb.toString());
         } else {
-            if(replyData.containsKey(message)){
-                Main.setNextSender(message_type,user_id,group_id,replyData.getString(message));
+            if (replyData.containsKey(message)) {
+                Main.setNextSender(message_type, user_id, group_id, replyData.getString(message));
             } else {
-                Main.setNextSender(message_type,user_id,group_id,"未找到匹配内容");
+                Main.setNextSender(message_type, user_id, group_id, "未找到匹配内容");
             }
         }
     }

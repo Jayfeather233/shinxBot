@@ -116,15 +116,15 @@ public class ImageGeneratorMain implements Processable {
                 Color w = originalArr[i + dx][j + dy];
 
                 Color s = new Color(
-                        (int)(u.getRed() * (u.getAlpha() / 255.0) + w.getRed() * (1 - u.getAlpha() / 255.0)),
-                        (int)(u.getGreen() * (u.getAlpha() / 255.0) + w.getGreen() * (1 - u.getAlpha() / 255.0)),
-                        (int)(u.getBlue() * (u.getAlpha() / 255.0) + w.getBlue() * (1 - u.getAlpha() / 255.0))
+                        (int) (u.getRed() * (u.getAlpha() / 255.0) + w.getRed() * (1 - u.getAlpha() / 255.0)),
+                        (int) (u.getGreen() * (u.getAlpha() / 255.0) + w.getGreen() * (1 - u.getAlpha() / 255.0)),
+                        (int) (u.getBlue() * (u.getAlpha() / 255.0) + w.getBlue() * (1 - u.getAlpha() / 255.0))
                 );
 
                 s = new Color(
-                        (int)(s.getRed() * (v.getRed() / 255.0) + w.getRed() * (1 - v.getRed() / 255.0)),
-                        (int)(s.getGreen() * (v.getGreen() / 255.0) + w.getGreen() * (1 - v.getGreen() / 255.0)),
-                        (int)(s.getBlue() * (v.getBlue() / 255.0) + w.getBlue() * (1 - v.getBlue() / 255.0))
+                        (int) (s.getRed() * (v.getRed() / 255.0) + w.getRed() * (1 - v.getRed() / 255.0)),
+                        (int) (s.getGreen() * (v.getGreen() / 255.0) + w.getGreen() * (1 - v.getGreen() / 255.0)),
+                        (int) (s.getBlue() * (v.getBlue() / 255.0) + w.getBlue() * (1 - v.getBlue() / 255.0))
                 );
                 original.setRGB(i + dx, j + dy, s.getRGB());
             }
@@ -139,7 +139,7 @@ public class ImageGeneratorMain implements Processable {
         Color[][] imgArr = new Color[w][h];
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                imgArr[i][j] = new Color(buffImg.getRGB(i, j),true);
+                imgArr[i][j] = new Color(buffImg.getRGB(i, j), true);
             }
         }
 

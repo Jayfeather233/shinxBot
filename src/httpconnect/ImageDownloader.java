@@ -6,14 +6,14 @@ import java.net.URLConnection;
 
 public class ImageDownloader {
     public static void download(String httpAddress, String filePath, String fileName) {
-        try{
+        try {
             URL url1 = new URL(httpAddress);
             URLConnection uc = url1.openConnection();
             InputStream inputStream = uc.getInputStream();
             FileOutputStream out;
-            try{
+            try {
                 out = new FileOutputStream("./" + filePath + '/' + fileName);
-            } catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 new File("./" + filePath).mkdirs();
                 out = new FileOutputStream("./" + filePath + '/' + fileName);
             }
@@ -24,7 +24,7 @@ public class ImageDownloader {
             inputStream.close();
             out.flush();
             out.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

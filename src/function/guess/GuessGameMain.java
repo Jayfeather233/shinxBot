@@ -11,11 +11,12 @@ class GuessGameInfo {
     public int state;
     public long stdAnswer;
 
-    public GuessGameInfo(int state, long stdAnswer){
+    public GuessGameInfo(int state, long stdAnswer) {
         this.state = state;
         this.stdAnswer = stdAnswer;
     }
 }
+
 public class GuessGameMain implements Processable {
 
     final Map<Long, GuessGameInfo> playerMap = new HashMap<>();
@@ -49,7 +50,8 @@ public class GuessGameMain implements Processable {
                             u.state = 10;
                             sendMsg(message_type, user_id, group_id, "请设置上限：");
                         }
-                        case 3 -> sendMsg(message_type, user_id, group_id, "猜数游戏：每猜一个数，机器人会告诉你比标准答案大还是小，在与标准答案相差10以内会说接近。\n困难猜数游戏：只会告诉你与标准答案相差的百分比区间。");
+                        case 3 ->
+                                sendMsg(message_type, user_id, group_id, "猜数游戏：每猜一个数，机器人会告诉你比标准答案大还是小，在与标准答案相差10以内会说接近。\n困难猜数游戏：只会告诉你与标准答案相差的百分比区间。");
                     }
                 }
                 case 1, 10 -> {

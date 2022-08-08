@@ -1,15 +1,15 @@
 package function.autoForwardGenerator;
 
-import main.Main;
-import main.Processable;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import main.Main;
+import main.Processable;
 
 import java.util.Scanner;
 
 public class AutoForwardGeneratorMain implements Processable {
 
-    private JSONObject getData(String s1, Scanner S, long group_id){
+    private JSONObject getData(String s1, Scanner S, long group_id) {
         JSONObject J2 = new JSONObject();
         String s2 = S.nextLine().trim();
         String uin;
@@ -25,8 +25,8 @@ public class AutoForwardGeneratorMain implements Processable {
         }
         J2.put("name", s1);
         J2.put("uin", uin);
-        if(s2.equals("转发")) {
-            J2.put("content", getContent(S,group_id));
+        if (s2.equals("转发")) {
+            J2.put("content", getContent(S, group_id));
         } else {
             int pos = 0;
             do {
@@ -45,14 +45,14 @@ public class AutoForwardGeneratorMain implements Processable {
     private JSONArray getContent(Scanner S, long group_id) {
         String s1;
         JSONArray JA = new JSONArray();
-        while(S.hasNext()){
+        while (S.hasNext()) {
             s1 = S.next();
-            if(s1.equals("结束转发")){
+            if (s1.equals("结束转发")) {
                 break;
             }
             JSONObject J = new JSONObject();
-            J.put("type","node");
-            J.put("data",getData(s1, S, group_id));
+            J.put("type", "node");
+            J.put("data", getData(s1, S, group_id));
             JA.add(J);
         }
         return JA;
@@ -61,8 +61,8 @@ public class AutoForwardGeneratorMain implements Processable {
     @Override
     public void process(String message_type, String message, long group_id, long user_id) {
         message = message.substring(2);
-        if(message.equals("帮助")){
-            Main.setNextSender(message_type,user_id,group_id, """
+        if (message.equals("帮助")) {
+            Main.setNextSender(message_type, user_id, group_id, """
                     格式为：
                     转发
                     [@某人或qq号] 消息（一整行）
@@ -76,16 +76,15 @@ public class AutoForwardGeneratorMain implements Processable {
             return;
         }
         Scanner S = new Scanner(message);
-        JSONArray JA = getContent(S,group_id);
+        JSONArray JA = getContent(S, group_id);
 
         JSONObject J = new JSONObject();
         J.put("messages", JA);
 
-        if(message_type.equals("group")){
+        if (message_type.equals("group")) {
             J.put("group_id", group_id);
             Main.setNextSender("send_group_forward_msg", J);
-        }
-        else{
+        } else {
             J.put("user_id", user_id);
             Main.setNextSender("send_private_forward_msg", J);
         }

@@ -1,10 +1,10 @@
 package function.getImage621;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import httpconnect.HttpURLConnectionUtil;
 import main.Main;
 import main.Processable;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.*;
 import java.net.SocketTimeoutException;
@@ -23,8 +23,8 @@ public class GetImage621Main implements Processable {
     public GetImage621Main() {
         try {
             File ff = new File("621Level.json");
-            if(!ff.exists()){
-                if(!ff.createNewFile()) System.out.println("621权限管理文件创建失败");
+            if (!ff.exists()) {
+                if (!ff.createNewFile()) System.out.println("621权限管理文件创建失败");
             }
             FileReader f = new FileReader("621Level.json");
             Scanner S = new Scanner(f);
@@ -92,10 +92,6 @@ public class GetImage621Main implements Processable {
         return quest;
     }
 
-    public static void main(String[] args) {
-        new GetImage621Main().process("group","621",614981678,1826559889);
-    }
-
     @Override
     public void process(String message_type, String message, long group_id, long user_id) {
 
@@ -148,30 +144,30 @@ public class GetImage621Main implements Processable {
         }
         StringBuilder quest = dealInput(message, level);
 
-        quest.insert(0,"https://e621.net/posts.json?limit=1&tags=");
+        quest.insert(0, "https://e621.net/posts.json?limit=1&tags=");
 
         JSONObject J;
         try {
             J = JSONObject.parseObject(HttpURLConnectionUtil.doGet(quest.toString()));
         } catch (SocketTimeoutException e) {
             retry++;
-            if(retry == 3){
+            if (retry == 3) {
                 Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
             } else {
-                this.process(message_type,"621" + message,group_id,user_id);
+                this.process(message_type, "621" + message, group_id, user_id);
             }
             return;
         }
-        if(J == null){
+        if (J == null) {
             retry++;
-            if(retry == 3){
+            if (retry == 3) {
                 Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
             } else {
-                this.process(message_type,"621" + message,group_id,user_id);
+                this.process(message_type, "621" + message, group_id, user_id);
             }
             return;
         }
-        if(J.getJSONArray("posts").size() == 0){
+        if (J.getJSONArray("posts").size() == 0) {
             Main.setNextSender(message_type, user_id, group_id, "不存在图片");
             return;
         }
@@ -179,7 +175,7 @@ public class GetImage621Main implements Processable {
         //System.out.println(J);
 
         String imageUrl;
-        if(retry != 0) imageUrl = J.getJSONObject("sample").getString("url");
+        if (retry != 0) imageUrl = J.getJSONObject("sample").getString("url");
         else imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
                 J.getJSONObject("sample").getString("url") :
                 J.getJSONObject("file").getString("url");
@@ -196,10 +192,10 @@ public class GetImage621Main implements Processable {
 
         retry = 0;
         J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
-        if(J.getString("status").equals("failed")){
-            if(retry != 0) Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
-            else{
-                this.process(message_type,"621" + message,group_id,user_id);
+        if (J.getString("status").equals("failed")) {
+            if (retry != 0) Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+            else {
+                this.process(message_type, "621" + message, group_id, user_id);
             }
         } else {
             lastMsg = J.getJSONObject("data").getLong("message_id");
@@ -207,8 +203,8 @@ public class GetImage621Main implements Processable {
     }
 
     private List<String> toArray(JSONArray ja) {
-        List <String> ls = new ArrayList<>();
-        for(Object o : ja){
+        List<String> ls = new ArrayList<>();
+        for (Object o : ja) {
             ls.add((String) o);
         }
         return ls;

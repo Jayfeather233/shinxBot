@@ -19,8 +19,8 @@ class info {
 }
 
 public class Auto114514Main implements Processable {
-    ArrayList<info> ai = new ArrayList<>();
     final String __1 = "11-4-5+1-4";
+    ArrayList<info> ai = new ArrayList<>();
 
     public Auto114514Main() {
         try {
