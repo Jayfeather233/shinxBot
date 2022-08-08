@@ -17,6 +17,11 @@ public class AutoReplyMain implements Processable {
             File ff = new File("replydata.json");
             if(!ff.exists()){
                 if(!ff.createNewFile()) System.out.println("自动回复文件创建失败");
+                else {
+                    FileWriter fw = new FileWriter(ff);
+                    fw.write("{}");
+                    fw.close();
+                }
             }
             FileReader f = new FileReader("replydata.json");
             Scanner S = new Scanner(f);

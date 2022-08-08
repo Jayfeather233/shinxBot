@@ -101,6 +101,7 @@ public class Main {
                     if(game.help()!=null)
                         sb.append(game.help()).append('\n');
                 }
+                sb.append("本Bot项目地址：https://github.com/Jayfeather233/shinxBot");
                 Main.setNextSender(message_type,user_id,group_id, String.valueOf(sb));
             } else {
                 for (Processable game : features) {
