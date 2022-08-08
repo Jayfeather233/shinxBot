@@ -1,4 +1,4 @@
-# bot_cqhttp
+# shinxBot
 
 一个基于[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)的机器人。
 
@@ -20,11 +20,10 @@
 main/Main.java 为入口。
 
 - src/main：包含Main.java和其他文件，用于给go-cqhttp分发消息。
-- src/game：包含所有游戏的java文件，用于处理游戏。
-- src/function：包含所有用于处理功能的java文件。(game和function其实是一样的东西)
-- src/event：包含所有用于处理event的java文件。(event事件传入整个JSON消息)
+- src/function：包含所有用于处理QQ消息的java文件。
+- src/event：包含所有用于处理QQ事件的java文件。(event事件传入整个JSON消息)
 - src/httpconnect：用于通过HTTP与go-cqhttp连接的文件以及用于下载图片的文件。
-- lib：支持JSON的文件。(Alibaba.fastjson)
+- lib：jar库。包含：支持JSON (Alibaba.fastjson)
 
 ### 如何运行这个机器人
 
@@ -62,11 +61,10 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 The main/Main.java is the starting point.
 
 - src/main: contains main.java and other files to distribute message with go-cqhttp.
-- src/game: contains all games' java files to process the games.
-- src/function: contains all java files to process the features. (Actually function and game are the same thing.)
-- src/event: contains all java files to process the events. (Will send entire JSON message)
+- src/function: contains all java files to process the QQ Message.
+- src/event: contains all java files to process the QQ events. (Will send entire JSON message as parameter)
 - src/httpconnect: files used to connect with go-cqhttp through HTTP and files for download images.
-- lib: support files for JSON. (Alibaba.fastjson)
+- lib: libraries. Contains: support files for JSON. (Alibaba.fastjson)
 
 ### How to run the bot
 
