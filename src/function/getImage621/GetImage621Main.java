@@ -177,12 +177,12 @@ public class GetImage621Main implements Processable {
         }
         J = J.getJSONArray("posts").getJSONObject(0);
         //System.out.println(J);
-/*
-        String imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
-                (J.getJSONObject("sample").getBoolean("has") ? J.getJSONObject("sample").getString("url") : J.getJSONObject("preview").getString("url")) :
-                J.getJSONObject("file").getString("url");*/
-        String imageUrl = J.getJSONObject("sample").getBoolean("has") ? J.getJSONObject("sample").getString("url") : J.getJSONObject("preview").getString("url");
 
+        String imageUrl;
+        if(retry != 0) imageUrl = J.getJSONObject("sample").getString("url");
+        else imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
+                J.getJSONObject("sample").getString("url") :
+                J.getJSONObject("file").getString("url");
         long id = J.getLong("id");
         long fav_count = J.getLong("fav_count");
         long score = J.getJSONObject("score").getLong("total");
@@ -197,7 +197,10 @@ public class GetImage621Main implements Processable {
         retry = 0;
         J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
         if(J.getString("status").equals("failed")){
-            Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+            if(retry != 0) Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+            else{
+                this.process(message_type,"621" + message,group_id,user_id);
+            }
         } else {
             lastMsg = J.getJSONObject("data").getLong("message_id");
         }
