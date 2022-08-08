@@ -156,7 +156,7 @@ public class GetImage621Main implements Processable {
         } catch (SocketTimeoutException e) {
             retry++;
             if(retry == 3){
-                Main.setNextSender(message_type, user_id, group_id, "发送图片失败");
+                Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
             } else {
                 this.process(message_type,"621" + message,group_id,user_id);
             }
@@ -165,7 +165,7 @@ public class GetImage621Main implements Processable {
         if(J == null){
             retry++;
             if(retry == 3){
-                Main.setNextSender(message_type, user_id, group_id, "发送图片失败");
+                Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
             } else {
                 this.process(message_type,"621" + message,group_id,user_id);
             }
@@ -197,7 +197,7 @@ public class GetImage621Main implements Processable {
         retry = 0;
         J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
         if(J.getString("status").equals("failed")){
-            Main.setNextSender(message_type, user_id, group_id, "发送图片失败");
+            Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
         } else {
             lastMsg = J.getJSONObject("data").getLong("message_id");
         }
