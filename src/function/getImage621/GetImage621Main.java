@@ -151,7 +151,7 @@ public class GetImage621Main implements Processable {
             J = JSONObject.parseObject(HttpURLConnectionUtil.doGet(quest.toString()));
         } catch (SocketTimeoutException e) {
             retry++;
-            if (retry == 3) {
+            if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
             } else {
                 this.process(message_type, "621" + message, group_id, user_id);
@@ -160,7 +160,7 @@ public class GetImage621Main implements Processable {
         }
         if (J == null) {
             retry++;
-            if (retry == 3) {
+            if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
             } else {
                 this.process(message_type, "621" + message, group_id, user_id);
@@ -175,7 +175,10 @@ public class GetImage621Main implements Processable {
         //System.out.println(J);
 
         String imageUrl;
-        if (retry != 0) imageUrl = J.getJSONObject("sample").getString("url");
+        if (retry >= 2){
+            if(retry == 2) imageUrl = J.getJSONObject("sample").getString("url");
+            else imageUrl = J.getJSONObject("preview").getString("url");
+        }
         else imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
                 J.getJSONObject("sample").getString("url") :
                 J.getJSONObject("file").getString("url");
@@ -190,15 +193,18 @@ public class GetImage621Main implements Processable {
         quest.append("Score: ").append(score).append("\n");
         quest.append("id: ").append(id);
 
-        retry = 0;
         J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
         if (J.getString("status").equals("failed")) {
-            if (retry != 0) Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+            retry ++;
+            if (retry >= 3){
+                Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+            }
             else {
                 this.process(message_type, "621" + message, group_id, user_id);
             }
         } else {
             lastMsg = J.getJSONObject("data").getLong("message_id");
+            retry = 0;
         }
     }
 
