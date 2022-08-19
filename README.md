@@ -14,6 +14,7 @@
 - 关键词回复
 - 群成员变动提醒
 - 在线编译代码
+- 数织游戏
 
 ### 关于源文件
 
@@ -55,6 +56,7 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 - Keywords reply.
 - React to group member change.
 - Online compiler.
+- Nonogram.
 
 ### About the source files
 
