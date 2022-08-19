@@ -14,6 +14,7 @@ import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
 import function.guess.GuessGameMain;
 import function.imageGenerator.ImageGeneratorMain;
+import function.nonogram.nonogram;
 import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
 
@@ -54,6 +55,7 @@ public class Main {
             }
         } else if (post_type.equals("message")) {
             String message = J_input.getString("message");
+            int message_id = J_input.getInteger("message_id");
             String message_type = J_input.containsKey("message_type") ? J_input.getString("message_type") : null;
             if (message == null || message_type == null) return;
             if (!message_type.equals("private") && !message_type.equals("group")) return;
@@ -92,7 +94,7 @@ public class Main {
             } else {
                 for (Processable game : features) {
                     if (game.check(message_type, message, group_id, user_id)) {
-                        game.process(message_type, message, group_id, user_id);
+                        game.process(message_type, message, group_id, user_id, message_id);
                     }
                 }
             }
@@ -112,13 +114,10 @@ public class Main {
     public synchronized static StringBuffer setNextSender(String msg_type, long user_id, long group_id, String msg) {
         JSONObject J = new JSONObject();
         J.put("message", msg);
-        if (msg_type.equals("group")) {
-            J.put("group_id", group_id);
-            return setNextSender("send_group_msg", J);
-        } else if (msg_type.equals("private")) {
-            J.put("user_id", user_id);
-            return setNextSender("send_msg", J);
-        } else return null;
+        J.put("message_type",msg_type);
+        J.put("group_id", group_id);
+        J.put("user_id", user_id);
+        return setNextSender("send_msg", J);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -134,6 +133,7 @@ public class Main {
         features.add(new GetImage2DMain());
         features.add(new AutoReplyMain());
         features.add(new compilerMain());
+        features.add(new nonogram());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());

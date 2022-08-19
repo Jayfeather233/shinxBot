@@ -51,7 +51,7 @@ public class AutoReplyMain implements Processable {
     }
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         message = message.substring(2).trim();
         if (message.startsWith("添加") && (user_id == ((long) 34258) * 100000 + 11925 || user_id == 1826559889)) {
             message = message.substring(2).trim();

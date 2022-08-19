@@ -56,7 +56,7 @@ public class DeliverMain implements Processable {
         return re;
     }
 
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         int t;
         if (message.contains(times[0][10]) || message.contains(times[1][10])) t = 11;
         else {

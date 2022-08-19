@@ -35,7 +35,7 @@ public class Auto114514Main implements Processable {
     }
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         try {
             long num = Long.parseLong(message.substring(4).trim());
             if (num == 114514) {

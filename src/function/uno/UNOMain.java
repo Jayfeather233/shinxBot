@@ -27,7 +27,7 @@ public class UNOMain implements Processable {
         unoIDMap.remove(userID);
     }
 
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         message = message.toLowerCase();
         if (!message.startsWith("uno.") && unoIDMap.containsKey(user_id)) {
             message = "uno.play " + message;

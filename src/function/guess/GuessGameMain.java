@@ -22,7 +22,7 @@ public class GuessGameMain implements Processable {
     final Map<Long, GuessGameInfo> playerMap = new HashMap<>();
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         if (message.equals("猜数")) {
             if (playerMap.containsKey(user_id)) {
                 sendMsg(message_type, user_id, group_id, "请先完成现有游戏或用 结束 来结束");

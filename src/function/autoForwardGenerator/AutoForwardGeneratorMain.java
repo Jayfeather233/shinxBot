@@ -59,7 +59,7 @@ public class AutoForwardGeneratorMain implements Processable {
     }
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         message = message.substring(2);
         if (message.equals("帮助")) {
             Main.setNextSender(message_type, user_id, group_id, """

@@ -42,7 +42,7 @@ public class compilerMain implements Processable {
     }
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         Scanner S = new Scanner(message.substring(4));
         String language = S.next();
         language = language.toLowerCase();

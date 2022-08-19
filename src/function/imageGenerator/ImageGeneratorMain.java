@@ -13,7 +13,7 @@ import java.io.IOException;
 public class ImageGeneratorMain implements Processable {
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         String fileName = "";
         for (int i = 2; i < message.length(); i++) {
             if (message.charAt(i) != ' ') {
@@ -104,7 +104,7 @@ public class ImageGeneratorMain implements Processable {
 
     }
 
-    private void generate(BufferedImage original, BufferedImage mask, BufferedImage scaled, int dx, int dy) {
+    private static void generate(BufferedImage original, BufferedImage mask, BufferedImage scaled, int dx, int dy) {
         Color[][] originalArr = getImagePixArray(original);
         Color[][] maskArr = getImagePixArray(mask);
         Color[][] scaledArr = getImagePixArray(scaled);
@@ -131,7 +131,7 @@ public class ImageGeneratorMain implements Processable {
         }
     }
 
-    private Color[][] getImagePixArray(BufferedImage buffImg) {
+    public static Color[][] getImagePixArray(BufferedImage buffImg) {
         // 获取图片尺寸
         int w = buffImg.getWidth();
         int h = buffImg.getHeight();

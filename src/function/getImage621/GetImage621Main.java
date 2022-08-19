@@ -93,7 +93,7 @@ public class GetImage621Main implements Processable {
     }
 
     @Override
-    public void process(String message_type, String message, long group_id, long user_id) {
+    public void process(String message_type, String message, long group_id, long user_id, int message_id) {
 
         message = message.toLowerCase();
         if (message.equals("621.recall") && lastMsg != 0) {
@@ -151,19 +151,21 @@ public class GetImage621Main implements Processable {
             J = JSONObject.parseObject(HttpURLConnectionUtil.doGet(quest.toString()));
         } catch (SocketTimeoutException e) {
             retry++;
+            System.out.println("621 network failed");
             if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
             } else {
-                this.process(message_type, "621" + message, group_id, user_id);
+                this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
             return;
         }
         if (J == null) {
             retry++;
+            System.out.println("621 unknown reason");
             if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
             } else {
-                this.process(message_type, "621" + message, group_id, user_id);
+                this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
             return;
         }
@@ -175,8 +177,8 @@ public class GetImage621Main implements Processable {
         //System.out.println(J);
 
         String imageUrl;
-        if (retry >= 2){
-            if(retry == 2) imageUrl = J.getJSONObject("sample").getString("url");
+        if (retry >= 1){
+            if(retry == 1) imageUrl = J.getJSONObject("sample").getString("url");
             else imageUrl = J.getJSONObject("preview").getString("url");
         }
         else imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
@@ -196,11 +198,12 @@ public class GetImage621Main implements Processable {
         J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
         if (J.getString("status").equals("failed")) {
             retry ++;
+            System.out.println("621 tx failed");
             if (retry >= 3){
                 Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
             }
             else {
-                this.process(message_type, "621" + message, group_id, user_id);
+                this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
         } else {
             lastMsg = J.getJSONObject("data").getLong("message_id");
