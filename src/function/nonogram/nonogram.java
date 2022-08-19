@@ -79,8 +79,8 @@ public class nonogram implements Processable {
                 int id = idMap.get(user_id).id;
                 pair u = getGameID(Integer.parseInt(message));
                 idMap.put(user_id, u);
-                System.out.println(u.diff);
-                System.out.println(u.id);
+                //System.out.println(u.diff);
+                //System.out.println(u.id);
                 Main.setNextSender(message_type, user_id, group_id, "[CQ:reply,id=" + id + "] [CQ:image,file=file:///" + new File("").getCanonicalPath() + generateNonogram(u) + "]");
             } catch (NumberFormatException e) {
                 return;

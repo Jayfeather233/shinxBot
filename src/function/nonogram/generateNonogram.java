@@ -25,6 +25,11 @@ public class generateNonogram {
         Scanner S = new Scanner(System.in);
         file = S.nextLine();
         pairx gameID = new pairx(S.nextInt(), S.nextInt());
+        System.out.println(detect(file,gameID));
+    }
+
+    public static String detect(String file, pairx gameID){
+        StringBuilder sb = new StringBuilder();
         try {
             BufferedImage buffImg = ImageIO.read(new File(file));
             int w = buffImg.getWidth();
@@ -75,12 +80,14 @@ public class generateNonogram {
                 for (int j = 0; j < gameID.diff * 5; j++) {
                     if (bri[i][j] < low) bri[i][j] = 1;
                     else bri[i][j] = 0;
-                    System.out.print(bri[i][j]);
+                    sb.append(bri[i][j]);
                 }
+                sb.append('\n');
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return sb.toString();
     }
 }
