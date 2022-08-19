@@ -60,11 +60,6 @@ public class nonogram implements Processable {
         }
     }
 
-    public static void main(String[] args) {
-        new nonogram().generateNonogram(new pair(2, 0));
-        // new nonogram().getProperFont("Calibri","123",new BufferedImage(10,10,BufferedImage.TYPE_INT_RGB).getGraphics(),10);
-    }
-
     @Override
     public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         if (message.equals("数织帮助")) {
@@ -128,7 +123,7 @@ public class nonogram implements Processable {
             }
         } else if (flg1) {
             isAt.put(user_id, true);
-            Main.setNextSender(message_type,user_id,group_id,"图来！");
+            Main.setNextSender(message_type, user_id, group_id, "图来！");
         } else {
             isAt.remove(user_id);
         }
@@ -194,7 +189,7 @@ public class nonogram implements Processable {
                 qq = getNumber(mp, 0, i, 1, 0, u.diff);
                 for (int qqq : qq) {
                     fontSize = Math.min(fontSize, getProperFont("微软雅黑", String.valueOf(qqq), g, 50, (80 * u.diff - 10) / qq.size()));
-                    interval=Math.min(interval,(80 * u.diff - 10) / qq.size());
+                    interval = Math.min(interval, (80 * u.diff - 10) / qq.size());
                 }
                 nums1.add(qq);
                 qq = getNumber(mp, i, 0, 0, 1, u.diff);
@@ -289,16 +284,16 @@ public class nonogram implements Processable {
             int[] cnt = new int[256];
             Color[][] imgColor = ImageGeneratorMain.getImagePixArray(buffImg);
 
-            System.out.printf("dx:%d, dy:%d, sizeX=%d, sizeY=%d",dx,dy,blockSizeX,blockSizeY);
+            //System.out.printf("dx:%d, dy:%d, sizeX=%d, sizeY=%d",dx,dy,blockSizeX,blockSizeY);
 
             for (int i = 0; i < gameID.diff * 5; i++) {
                 for (int j = 0; j < gameID.diff * 5; j++) {
                     int tr = 0, cntx = 0;
-                    System.out.printf("%d %d\n",i,j);
+                    //System.out.printf("%d %d\n",i,j);
                     //System.out.println("x: from " + ((i + gameID.diff) * blockSizeX + 5) + " to "+ ((i + gameID.diff + 1) * blockSizeX + 5));
                     //System.out.println("y: from " + ((j + gameID.diff) * blockSizeY + 5) + " to "+ ((j + gameID.diff + 1) * blockSizeY + 5));
-                    for (int ii = (i + gameID.diff) * blockSizeX + dx + blockSizeX /8; ii < (i + gameID.diff + 1) * blockSizeX + dx- blockSizeX /8; ii++)
-                        for (int jj = (j + gameID.diff) * blockSizeY + dy+ blockSizeY /8; jj < (j + gameID.diff + 1) * blockSizeY + dy- blockSizeY /8; jj++) {
+                    for (int ii = (i + gameID.diff) * blockSizeX + dx + blockSizeX / 8; ii < (i + gameID.diff + 1) * blockSizeX + dx - blockSizeX / 8; ii++)
+                        for (int jj = (j + gameID.diff) * blockSizeY + dy + blockSizeY / 8; jj < (j + gameID.diff + 1) * blockSizeY + dy - blockSizeY / 8; jj++) {
                             if (jj < imgColor.length && ii < imgColor[jj].length) {
                                 tr += imgColor[jj][ii].getRed() + imgColor[jj][ii].getGreen() + imgColor[jj][ii].getBlue();
                                 cntx++;
@@ -318,24 +313,11 @@ public class nonogram implements Processable {
                     minn = Math.min(minn, i);
                     maxn = Math.max(maxn, i);
                 }
-                System.out.printf("%d %d %d\n", cnt[i], minn, maxn);
+                //System.out.printf("%d %d %d\n", cnt[i], minn, maxn);
             }
-            int low = maxn-20;
+            int low = maxn - 20;
 
             String ans = gameList.get(gameID.diff - 1).get(gameID.id);
-            /*
-            for (int i = 0; i < gameID.diff * 5; i++) {
-                for (int j = 0; j < gameID.diff * 5; j++) {
-                    System.out.print(bri[i][j] + " ");
-                }
-                System.out.println("");
-            }
-            for (int i = 0; i < gameID.diff * 5; i++) {
-                for (int j = 0; j < gameID.diff * 5; j++) {
-                    System.out.print((bri[i][j] < low ? 1 : 0) + " ");
-                }
-                System.out.println("");
-            }*/
             for (int i = 0; i < gameID.diff * 5; i++) {
                 for (int j = 0; j < gameID.diff * 5; j++) {
                     if (bri[i][j] < low) bri[i][j] = 1;
