@@ -65,7 +65,7 @@ public class nonogram implements Processable {
         if (message.equals("数织帮助")) {
             Main.setNextSender(message_type, user_id, group_id, """
                     游戏棋盘是一张正方形网格. 棋盘每一行左边或每一列上方的数字表示该行或该列上每一组相邻的黑色方格的长度。 游戏目标是要找出所有的黑色方格。在原图上涂黑后发回机器人即可。
-                    来局数织：开始新游戏
+                    开始新游戏：来局数织
                     提交答案：@机器人并发送图片""");
             return;
         }
@@ -130,12 +130,12 @@ public class nonogram implements Processable {
     }
 
     private String getColoredImg(pair u) {
-        File file = new File("./resource/nonogram/" + u.diff + "/" + u.id + "color.png");
+        File file = new File("./resource/nonogram/" + u.diff + "/color" + u.id + ".png");
         if (!file.exists()) {
             return "";
         } else {
             try {
-                return "\n[CQ:image,file=file:///" + new File("").getCanonicalPath() + "/resource/nonogram/" + u.diff + "/" + u.id + "color.png]";
+                return "\n[CQ:image,file=file:///" + new File("").getCanonicalPath() + "/resource/nonogram/" + u.diff + "/color" + u.id + ".png]";
             } catch (IOException e) {
                 return "";
             }
@@ -143,7 +143,7 @@ public class nonogram implements Processable {
     }
 
     private String generateNonogram(pair u) {
-        File outFile = new File("./resource/nonogram/" + u.diff + "/" + u.id + "board.png");
+        File outFile = new File("./resource/nonogram/" + u.diff + "/board" + u.id + ".png");
         if (!outFile.exists()) {
             BufferedImage buffImg = new BufferedImage(80 * u.diff * 6 + 10, 80 * u.diff * 6 + 10, BufferedImage.TYPE_INT_RGB);
             Graphics g = buffImg.getGraphics();
@@ -229,7 +229,7 @@ public class nonogram implements Processable {
                 }
             }
         }
-        return "/resource/nonogram/" + u.diff + "/" + u.id + "board.png";
+        return "/resource/nonogram/" + u.diff + "/board" + u.id + ".png";
     }
 
     private List<Integer> getNumber(boolean[][] mp, int x, int y, int dx, int dy, int diff) {
