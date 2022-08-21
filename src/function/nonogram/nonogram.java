@@ -66,6 +66,7 @@ public class nonogram implements Processable {
             Main.setNextSender(message_type, user_id, group_id, """
                     游戏棋盘是一张正方形网格. 棋盘每一行左边或每一列上方的数字表示该行或该列上每一组相邻的黑色方格的长度。 游戏目标是要找出所有的黑色方格。在原图上涂黑后发回机器人即可。
                     开始新游戏：来局数织
+                    数织检测：数织检测 [1,2,3](难度) [图片]
                     提交答案：@机器人并发送图片""");
             return;
         }
@@ -79,8 +80,6 @@ public class nonogram implements Processable {
                 int id = idMap.get(user_id).id;
                 pair u = getGameID(Integer.parseInt(message));
                 idMap.put(user_id, u);
-                //System.out.println(u.diff);
-                //System.out.println(u.id);
                 Main.setNextSender(message_type, user_id, group_id, "[CQ:reply,id=" + id + "] [CQ:image,file=file:///" + new File("").getCanonicalPath() + generateNonogram(u) + "]");
             } catch (NumberFormatException e) {
                 return;
@@ -284,14 +283,9 @@ public class nonogram implements Processable {
             int[] cnt = new int[256];
             Color[][] imgColor = ImageGeneratorMain.getImagePixArray(buffImg);
 
-            //System.out.printf("dx:%d, dy:%d, sizeX=%d, sizeY=%d",dx,dy,blockSizeX,blockSizeY);
-
             for (int i = 0; i < gameID.diff * 5; i++) {
                 for (int j = 0; j < gameID.diff * 5; j++) {
                     int tr = 0, cntx = 0;
-                    //System.out.printf("%d %d\n",i,j);
-                    //System.out.println("x: from " + ((i + gameID.diff) * blockSizeX + 5) + " to "+ ((i + gameID.diff + 1) * blockSizeX + 5));
-                    //System.out.println("y: from " + ((j + gameID.diff) * blockSizeY + 5) + " to "+ ((j + gameID.diff + 1) * blockSizeY + 5));
                     for (int ii = (i + gameID.diff) * blockSizeX + dx + blockSizeX / 8; ii < (i + gameID.diff + 1) * blockSizeX + dx - blockSizeX / 8; ii++)
                         for (int jj = (j + gameID.diff) * blockSizeY + dy + blockSizeY / 8; jj < (j + gameID.diff + 1) * blockSizeY + dy - blockSizeY / 8; jj++) {
                             if (jj < imgColor.length && ii < imgColor[jj].length) {
@@ -301,10 +295,8 @@ public class nonogram implements Processable {
 
                         }
                     bri[i][j] = Math.min(255, tr / (3 * cntx));
-                    //System.out.print(bri[i][j] + " ");
                     cnt[bri[i][j]]++;
                 }
-                //System.out.println("");
             }
 
             int minn = 255, maxn = 0;
@@ -313,19 +305,16 @@ public class nonogram implements Processable {
                     minn = Math.min(minn, i);
                     maxn = Math.max(maxn, i);
                 }
-                //System.out.printf("%d %d %d\n", cnt[i], minn, maxn);
             }
-            int low = maxn - 20;
+            int low = Math.max(maxn - 8, maxn-(maxn-minn+4)/5);
 
             String ans = gameList.get(gameID.diff - 1).get(gameID.id);
             for (int i = 0; i < gameID.diff * 5; i++) {
                 for (int j = 0; j < gameID.diff * 5; j++) {
                     if (bri[i][j] < low) bri[i][j] = 1;
                     else bri[i][j] = 0;
-                    //System.out.print(bri[i][j] + " ");
                     if (bri[i][j] != ans.charAt(i * gameID.diff * 5 + j) - '0') return false;
                 }
-                //System.out.println("");
             }
 
         } catch (IOException e) {

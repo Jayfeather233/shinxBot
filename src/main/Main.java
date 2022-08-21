@@ -14,6 +14,7 @@ import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
 import function.guess.GuessGameMain;
 import function.imageGenerator.ImageGeneratorMain;
+import function.nonogram.generateNonogram;
 import function.nonogram.nonogram;
 import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
@@ -76,11 +77,11 @@ public class Main {
                 userName.put(user_id, uName);
             }
 
-            if (message.equals("cntest")) {
+            if (message.equals("bot.cntest")) {
                 if (message_type.equals("group")) {
                     JSONObject J = new JSONObject();
                     J.put("group_id", group_id);
-                    J.put("message", "中文测试[t]");
+                    J.put("message", "中文测试");
                     setNextSender("send_group_msg", J);
                 }
             } else if (message.equals("bot.help")) {
@@ -114,7 +115,7 @@ public class Main {
     public synchronized static StringBuffer setNextSender(String msg_type, long user_id, long group_id, String msg) {
         JSONObject J = new JSONObject();
         J.put("message", msg);
-        J.put("message_type",msg_type);
+        J.put("message_type", msg_type);
         J.put("group_id", group_id);
         J.put("user_id", user_id);
         return setNextSender("send_msg", J);
@@ -134,6 +135,7 @@ public class Main {
         features.add(new AutoReplyMain());
         features.add(new compilerMain());
         features.add(new nonogram());
+        features.add(new generateNonogram());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
