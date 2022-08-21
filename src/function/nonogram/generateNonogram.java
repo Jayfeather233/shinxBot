@@ -75,9 +75,9 @@ public class generateNonogram implements Processable {
 
             for (int i = 0; i < gameID.diff * 5; i++) {
                 for (int j = 0; j < gameID.diff * 5; j++) {
-                    sb.append(bri[i][j]).append(' ');
                     if (bri[i][j] < low) bri[i][j] = 1;
                     else bri[i][j] = 0;
+                    sb.append(bri[i][j]).append(' ');
                 }
                 sb.append('\n');
             }
