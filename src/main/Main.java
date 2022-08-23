@@ -170,6 +170,10 @@ public class Main {
         R1.start();
         System.out.println("end.");
         JSONObject J_input;
+        J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
+        botQQ = J_input.getJSONObject("data").getLong("user_id");
+        System.out.println("QQ:" + botQQ);
+
         boolean flg = true;
         JSONArray JA = null;
         while (flg) {
@@ -182,9 +186,6 @@ public class Main {
             }
             Thread.sleep(10000);
         }
-        J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
-        botQQ = J_input.getJSONObject("data").getLong("user_id");
-        System.out.println("QQ:" + botQQ);
         for (Object o : JA) {
             friendSet.add(((JSONObject) o).getLong("user_id"));
         }

@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class GetImage621Main implements Processable {
 
@@ -122,6 +123,22 @@ public class GetImage621Main implements Processable {
                                 5: explicit""");
             return;
         }
+        if(message.startsWith("621.tag")){
+            if(message.startsWith("621.tags")) message=message.substring(8).trim();
+            else message=message.substring(7).trim();
+            try {
+                JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.doGet("https://e621.net/tags/autocomplete.json?search[name_matches]=" + message + "&expiry=7"));
+
+                StringBuilder sb = new StringBuilder();
+                for(Object J : JA){
+                    sb.append(((JSONObject)J).getString("name")).append("    ").append(numberTrans(((JSONObject)J).getInteger("post_count"))).append('\n');
+                }
+                Main.setNextSender(message_type,user_id,group_id,sb.toString());
+            } catch (SocketTimeoutException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
 
         int level = -1;
         if (message_type.equals("group")) {
@@ -209,6 +226,12 @@ public class GetImage621Main implements Processable {
             lastMsg = J.getJSONObject("data").getLong("message_id");
             retry = 0;
         }
+    }
+
+    private String numberTrans(int u) {
+        if(u>1000000) return (u/1000000)+"M";
+        else if(u>1000) return (u/1000)+"k";
+        else return String.valueOf(u);
     }
 
     private List<String> toArray(JSONArray ja) {
