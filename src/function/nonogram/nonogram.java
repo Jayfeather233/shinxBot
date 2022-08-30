@@ -2,7 +2,7 @@ package function.nonogram;
 
 import com.alibaba.fastjson.JSONObject;
 import function.imageGenerator.ImageGeneratorMain;
-import httpconnect.ImageDownloader;
+import utils.ImageDownloader;
 import main.Main;
 import main.Processable;
 

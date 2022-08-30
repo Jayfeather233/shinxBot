@@ -5,19 +5,19 @@ import com.alibaba.fastjson.JSONObject;
 import httpconnect.HttpURLConnectionUtil;
 import main.Main;
 import main.Processable;
+import utils.ImageDownloader;
 
 import java.io.*;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 public class GetImage621Main implements Processable {
 
+    String userName, authorKey;
     private JSONArray JGroup, JPrivate, JAdmin;
     private long lastMsg = 0;
-
     private int retry = 0;
 
 
@@ -38,6 +38,8 @@ public class GetImage621Main implements Processable {
             JGroup = J.getJSONArray("group");
             JPrivate = J.getJSONArray("private");
             JAdmin = J.getJSONArray("admin");
+            userName = J.getString("username");
+            authorKey = J.getString("authorKey");
             S.close();
             f.close();
 
@@ -55,7 +57,7 @@ public class GetImage621Main implements Processable {
         4: explicit feral or s/q
         5: explicit
      */
-    private StringBuilder dealInput(String input, int level) {
+    private StringBuilder dealInput(String input, int level, boolean poolFlag) {
 
         StringBuilder sb = new StringBuilder(input);
 
@@ -82,11 +84,11 @@ public class GetImage621Main implements Processable {
         }
         if (quest.length() == 0) quest.append("eeveelution");
         if (!input.contains("id:")) {
-            if (!input.contains("favcount") && !input.contains("score") && level <= 2)
+            if (!input.contains("favcount") && !input.contains("score") && level <= 2 && !poolFlag)
                 quest.append("+favcount:>10").append("+score:>10");
-            else if (!input.contains("favcount") && !input.contains("score"))
+            else if (!input.contains("favcount") && !input.contains("score") && !poolFlag)
                 quest.append("+favcount:>400").append("+score:>200");
-            if (!input.contains("order")) quest.append("+order:random");
+            if (!input.contains("order") && !poolFlag) quest.append("+order:random");
             if (!input.contains("gore") && level <= 4) quest.append("+-gore");
             if (!input.contains("human") && level <= 2) quest.append("+-human");
         }
@@ -111,6 +113,10 @@ public class GetImage621Main implements Processable {
             adminProcessDel(message_type, message.substring(8), group_id, user_id);
             return;
         }
+        if (message.equals("621.default")) {
+            Main.setNextSender(message_type, user_id, group_id, "如未指定tag，默认加上eeveelution\n如未指定favcount或score，默认加上favcount:>400 score:>200\n如未指定以下tags，默认不搜索gore,anthro,human");
+            return;
+        }
         if (message.equals("621.level")) {
             Main.setNextSender(message_type, user_id, group_id,
                     """
@@ -123,17 +129,17 @@ public class GetImage621Main implements Processable {
                                 5: explicit""");
             return;
         }
-        if(message.startsWith("621.tag")){
-            if(message.startsWith("621.tags")) message=message.substring(8).trim();
-            else message=message.substring(7).trim();
+        if (message.startsWith("621.tag")) {
+            if (message.startsWith("621.tags")) message = message.substring(8).trim();
+            else message = message.substring(7).trim();
             try {
-                JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.doGet("https://e621.net/tags/autocomplete.json?search[name_matches]=" + message + "&expiry=7"));
+                JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get("https://e621.net/tags/autocomplete.json?search[name_matches]=" + message + "&expiry=7", userName, false, null));
 
                 StringBuilder sb = new StringBuilder();
-                for(Object J : JA){
-                    sb.append(((JSONObject)J).getString("name")).append("    ").append(numberTrans(((JSONObject)J).getInteger("post_count"))).append('\n');
+                for (Object J : JA) {
+                    sb.append(((JSONObject) J).getString("name")).append("    ").append(numberTrans(((JSONObject) J).getInteger("post_count"))).append('\n');
                 }
-                Main.setNextSender(message_type,user_id,group_id,sb.toString());
+                Main.setNextSender(message_type, user_id, group_id, sb.toString());
             } catch (SocketTimeoutException e) {
                 e.printStackTrace();
             }
@@ -153,19 +159,27 @@ public class GetImage621Main implements Processable {
             }
         }
         if (level < 0) return;
-
-        message = message.substring(3);
-        if (message.equals(".default")) {
-            Main.setNextSender(message_type, user_id, group_id, "如未指定tag，默认加上eeveelution\n如未指定favcount或score，默认加上favcount:>400 score:>200\n如未指定以下tags，默认不搜索gore,anthro,human");
+        boolean poolFlag = message.contains("pool:");
+        if (message.startsWith("621.input")) {
+            Main.setNextSender(message_type, user_id, group_id, String.valueOf(dealInput(message.substring(9), level, poolFlag)));
             return;
         }
-        StringBuilder quest = dealInput(message, level);
+
+        message = message.substring(3);
+        StringBuilder quest = dealInput(message, level, poolFlag);
+        StringBuilder quest2 = new StringBuilder(quest);
 
         quest.insert(0, "https://e621.net/posts.json?limit=1&tags=");
+        quest2.insert(0, "https://e621.net/posts.json?limit=50&tags=");
 
-        JSONObject J;
+        //System.out.println(quest2);
+
+        JSONObject J, J2;
         try {
-            J = JSONObject.parseObject(HttpURLConnectionUtil.doGet(quest.toString()));
+            J = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest.toString(), userName, true, authorKey));
+            //System.out.println(HttpURLConnectionUtil.doGet(quest2.toString()));
+            J2 = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest2.toString(), userName, true, authorKey));
+            //System.out.println(J2);
         } catch (SocketTimeoutException e) {
             retry++;
             System.out.println("621 network failed");
@@ -176,7 +190,7 @@ public class GetImage621Main implements Processable {
             }
             return;
         }
-        if (J == null) {
+        if (J == null || J2 == null) {
             retry++;
             System.out.println("621 unknown reason");
             if (retry >= 3) {
@@ -186,60 +200,117 @@ public class GetImage621Main implements Processable {
             }
             return;
         }
+        int count = J2.getJSONArray("posts").size();
         if (J.getJSONArray("posts").size() == 0) {
             Main.setNextSender(message_type, user_id, group_id, "不存在图片");
             return;
         }
-        J = J.getJSONArray("posts").getJSONObject(0);
-        //System.out.println(J);
 
-        String imageUrl;
-        if (retry >= 1){
-            if(retry == 1) imageUrl = J.getJSONObject("sample").getString("url");
-            else imageUrl = J.getJSONObject("preview").getString("url");
-        }
-        else imageUrl = toArray(J.getJSONObject("tags").getJSONArray("meta")).contains("animated") ?
-                J.getJSONObject("sample").getString("url") :
-                J.getJSONObject("file").getString("url");
-        long id = J.getLong("id");
-        long fav_count = J.getLong("fav_count");
-        long score = J.getJSONObject("score").getLong("total");
+        if (!poolFlag) {
+            J = J.getJSONArray("posts").getJSONObject(0);
 
+            J = JSONObject.parseObject(String.valueOf(
+                    Main.setNextSender(message_type, user_id, group_id, getImageInfo(J, count, poolFlag))));
 
-        quest = new StringBuilder();
-        quest.append("[CQ:image,file=").append(imageUrl).append(",id=40000]\n");
-        quest.append("Fav_count: ").append(fav_count).append("  ");
-        quest.append("Score: ").append(score).append("\n");
-        quest.append("id: ").append(id);
-
-        J = JSONObject.parseObject(String.valueOf(Main.setNextSender(message_type, user_id, group_id, String.valueOf(quest))));
-        if (J.getString("status").equals("failed")) {
-            retry ++;
-            System.out.println("621 tx failed");
-            if (retry >= 3){
-                Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
-            }
-            else {
-                this.process(message_type, "621" + message, group_id, user_id, message_id);
+            if (J.getString("status").equals("failed")) {
+                retry++;
+                System.out.println("621 tx failed");
+                if (retry >= 3) {
+                    Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+                } else {
+                    this.process(message_type, "621" + message, group_id, user_id, message_id);
+                }
+            } else {
+                lastMsg = J.getJSONObject("data").getLong("message_id");
+                retry = 0;
             }
         } else {
-            lastMsg = J.getJSONObject("data").getLong("message_id");
-            retry = 0;
+            try {
+                long poolID = getPoolID(J2.getJSONArray("posts").getJSONObject(0));
+                String quest3 = "https://e621.net/pools.json?search[id]=" + poolID;
+                JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get(quest3, userName, true, authorKey));
+                List<Integer> postIDs = JA.getJSONObject(0).getJSONArray("post_ids").toJavaList(Integer.class);
+                StringBuilder msg = new StringBuilder("转发\n");
+                for (int i = 0; i < postIDs.size(); i++) {
+                    for (int j = 0; j < J2.getJSONArray("posts").size(); j++) {
+                        if (Objects.equals(postIDs.get(i), J2.getJSONArray("posts").getJSONObject(j).getInteger("id"))) {
+                            msg.append(Main.botQQ).append(" 合并行\n");
+                            msg.append(getImageInfo(J2.getJSONArray("posts").getJSONObject(j), count, poolFlag));
+                            msg.append("\n结束合并\n");
+                        }
+                    }
+                }
+                J = new JSONObject();
+                J.put("post_type", "message");
+                J.put("message", msg.toString());
+                J.put("message_type", message_type);
+                J.put("message_id", message_id);
+                J.put("user_id", user_id);
+                J.put("group_id", group_id);
+                Main.setNextOutput(J.toString());
+                retry = 0;
+            } catch (SocketTimeoutException e) {
+                throw new RuntimeException(e);
+            }
         }
+    }
+
+    private long getPoolID(JSONObject posts) {
+        return posts.getJSONArray("pools").getInteger(0);
     }
 
     private String numberTrans(int u) {
-        if(u>1000000) return (u/1000000)+"M";
-        else if(u>1000) return (u/1000)+"k";
+        if (u > 1000000) return (u / 1000000) + "M";
+        else if (u > 1000) return (u / 1000) + "k";
         else return String.valueOf(u);
     }
 
-    private List<String> toArray(JSONArray ja) {
-        List<String> ls = new ArrayList<>();
-        for (Object o : ja) {
-            ls.add((String) o);
+    private String getImageInfo(JSONObject J, int count, boolean poolFlag) {
+
+        String imageUrl;
+        if (retry >= 1) {
+            if (retry == 1) imageUrl = J.getJSONObject("sample").getString("url");
+            else imageUrl = J.getJSONObject("preview").getString("url");
+        } else imageUrl = J.getJSONObject("tags").getJSONArray("meta").toJavaList(String.class).contains("animated") ?
+                J.getJSONObject("sample").getString("url") :
+                J.getJSONObject("file").getString("url");
+
+        if (imageUrl == null) return "";
+        long id = J.getLong("id");
+        long fav_count = J.getLong("fav_count");
+        long score = J.getJSONObject("score").getLong("total");
+        StringBuilder quest = new StringBuilder();
+        if (!poolFlag && count != 50) quest.append("只有").append(count).append("个图片\n");
+        if (poolFlag && count == 50) quest.append("多于").append(count).append("个图片\n");
+
+        int extPos = 0, tmpPos;
+        while ((tmpPos = imageUrl.indexOf(".", extPos)) != -1) extPos = tmpPos+1;
+        String fileExt = imageUrl.substring(extPos);
+        String imageLocalPath = String.valueOf(id) + '.' + fileExt;
+        if (!new File("resource/download/e621/" + imageLocalPath).exists()) {
+            ImageDownloader.download(imageUrl, "resource/download/e621", imageLocalPath);
         }
-        return ls;
+        ImageDownloader.addRandomNoise("resource/download/e621/" + imageLocalPath, fileExt);
+
+        try {
+            quest.append("[CQ:image,file=file:///").append(new File("").getCanonicalPath()).append("/resource/download/e621/").append(imageLocalPath).append(",id=40000]\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        quest.append("Fav_count: ").append(fav_count).append("  ");
+        quest.append("Score: ").append(score).append("\n");
+
+        List<Integer> poolList = J.getJSONArray("pools").toJavaList(Integer.class);
+        if (poolList.size() > 0) {
+            quest.append("pools:");
+            for (int u : poolList) {
+                quest.append(" ").append(u);
+            }
+            quest.append('\n');
+        }
+
+        quest.append("id: ").append(id);
+        return quest.toString();
     }
 
     private void adminProcessSet(String message_type, String message, long group_id, long user_id) {
@@ -452,6 +523,8 @@ public class GetImage621Main implements Processable {
         J.put("group", JGroup);
         J.put("private", JPrivate);
         J.put("admin", JAdmin);
+        J.put("username", userName);
+        J.put("authorKey", authorKey);
         bw.write(J.toString());
         bw.close();
         fw.close();

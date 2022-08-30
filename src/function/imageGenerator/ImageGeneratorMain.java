@@ -1,6 +1,6 @@
 package function.imageGenerator;
 
-import httpconnect.ImageDownloader;
+import utils.ImageDownloader;
 import main.Main;
 import main.Processable;
 

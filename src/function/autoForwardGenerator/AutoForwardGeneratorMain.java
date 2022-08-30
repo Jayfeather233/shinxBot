@@ -11,7 +11,15 @@ public class AutoForwardGeneratorMain implements Processable {
 
     private JSONObject getData(String s1, Scanner S, long group_id) {
         JSONObject J2 = new JSONObject();
-        String s2 = S.nextLine().trim();
+        StringBuilder s2 = new StringBuilder(S.nextLine().trim());
+        if(s2.toString().equals("合并行")){
+            String nxt = S.nextLine().trim();
+            while(!nxt.equals("结束合并")){
+                s2.append('\n').append(nxt);
+                nxt=S.nextLine().trim();
+            }
+            s2= new StringBuilder(s2.substring(4));
+        }
         String uin;
         if (s1.startsWith("[CQ:at,qq=")) {
             s1 = s1.substring(10);
@@ -25,7 +33,7 @@ public class AutoForwardGeneratorMain implements Processable {
         }
         J2.put("name", s1);
         J2.put("uin", uin);
-        if (s2.equals("转发")) {
+        if (s2.toString().equals("转发")) {
             J2.put("content", getContent(S, group_id));
         } else {
             int pos = 0;
@@ -34,9 +42,9 @@ public class AutoForwardGeneratorMain implements Processable {
                 if (pos == -1) break;
                 int po1 = pos + 10;
                 while (s2.charAt(pos) != ']') pos++;
-                s2 = s2.substring(0, pos) + ",name=" + Main.getUserName(group_id, Long.parseLong(s2.substring(po1, pos))) + s2.substring(pos);
+                s2 = new StringBuilder(s2.substring(0, pos) + ",name=" + Main.getUserName(group_id, Long.parseLong(s2.substring(po1, pos))) + s2.substring(pos));
             } while (true);
-            J2.put("content", s2);
+            J2.put("content", s2.toString());
         }
         return J2;
     }
@@ -66,6 +74,9 @@ public class AutoForwardGeneratorMain implements Processable {
                     格式为：
                     转发
                     [@某人或qq号] 消息（一整行）
+                    [@某人或qq号] 合并行
+                    （多行消息）
+                    结束合并
                     ...
                     [@某人或qq号] 转发
                     （此处为转发内套转发）

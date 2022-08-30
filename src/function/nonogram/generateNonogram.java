@@ -1,7 +1,7 @@
 package function.nonogram;
 
 import function.imageGenerator.ImageGeneratorMain;
-import httpconnect.ImageDownloader;
+import utils.ImageDownloader;
 import main.Main;
 import main.Processable;
 
