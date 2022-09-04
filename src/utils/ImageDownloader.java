@@ -72,4 +72,10 @@ public class ImageDownloader {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean saveImg(BufferedImage buffImg, String ext, String path) throws IOException {
+        File f = new File(path);
+        if(!f.mkdirs()) return false;
+        return ImageIO.write(buffImg,ext,f);
+    }
 }

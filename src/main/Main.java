@@ -16,6 +16,7 @@ import function.guess.GuessGameMain;
 import function.imageGenerator.ImageGeneratorMain;
 import function.nonogram.generateNonogram;
 import function.nonogram.nonogram;
+import function.randomColor.randomColorMain;
 import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
 
@@ -136,6 +137,7 @@ public class Main {
         features.add(new compilerMain());
         features.add(new nonogram());
         features.add(new generateNonogram());
+        features.add(new randomColorMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
