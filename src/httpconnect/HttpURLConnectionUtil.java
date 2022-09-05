@@ -87,6 +87,8 @@ public class HttpURLConnectionUtil {
 
     public static String doGet(String httpUrl) throws SocketTimeoutException {
         //链接
+        List<Proxy> l = getProxyList(httpUrl);
+        if (l == null) return "";
 
         HttpURLConnection connection = null;
         InputStream is = null;
@@ -96,7 +98,7 @@ public class HttpURLConnectionUtil {
             //创建连接
             URL url = new URL(httpUrl);
 
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection(l.get(0));
 
             //设置请求方式
             connection.setRequestMethod("GET");
@@ -151,11 +153,14 @@ public class HttpURLConnectionUtil {
      * @param obj     参数
      */
     public static StringBuffer doPost(String ADD_URL, JSONObject obj) {
+        List<Proxy> l = getProxyList(ADD_URL);
+        if (l == null) return new StringBuffer();
+        //System.out.println(l);
 
         try {
             //创建连接
             URL url = new URL(ADD_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection(l.get(0));
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setRequestMethod("POST");
