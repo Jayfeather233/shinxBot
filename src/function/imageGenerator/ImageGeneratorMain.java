@@ -101,7 +101,7 @@ public class ImageGeneratorMain implements Processable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Main.setNextLog("ImgGenerator at group " + group_id + " by " + user_id, 0);
     }
 
     private static void generate(BufferedImage original, BufferedImage mask, BufferedImage scaled, int dx, int dy) {

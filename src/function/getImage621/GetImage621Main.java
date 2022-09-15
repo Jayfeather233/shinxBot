@@ -158,7 +158,10 @@ public class GetImage621Main implements Processable {
                 if (J.getLong("id") == user_id) level = J.getInteger("level");
             }
         }
-        if (level < 0) return;
+        if (level < 0) {
+            Main.setNextLog("621 at group " + group_id + " by " + user_id + " but level < 0", 0);
+            return;
+        }
         boolean poolFlag = message.contains("pool:");
         if (message.startsWith("621.input")) {
             Main.setNextSender(message_type, user_id, group_id, String.valueOf(dealInput(message.substring(9), level, poolFlag)));
@@ -182,9 +185,10 @@ public class GetImage621Main implements Processable {
             //System.out.println(J2);
         } catch (SocketTimeoutException e) {
             retry++;
-            System.out.println("621 network failed");
+            //System.out.println("621 network failed");
             if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
+                Main.setNextLog("621 at group " + group_id + " by " + user_id + " but SocketTimeOut and retry = " + retry, 2);
             } else {
                 this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
@@ -192,9 +196,10 @@ public class GetImage621Main implements Processable {
         }
         if (J == null || J2 == null) {
             retry++;
-            System.out.println("621 unknown reason");
+            //System.out.println("621 unknown reason");
             if (retry >= 3) {
                 Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
+                Main.setNextLog("621 at group " + group_id + " by " + user_id + " but unknown reason and retry = " + retry, 2);
             } else {
                 this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
@@ -203,6 +208,7 @@ public class GetImage621Main implements Processable {
         int count = J2.getJSONArray("posts").size();
         if (J.getJSONArray("posts").size() == 0) {
             Main.setNextSender(message_type, user_id, group_id, "不存在图片");
+            Main.setNextLog("621 at group " + group_id + " by " + user_id + " but no img and retry = " + retry, 0);
             return;
         }
 
@@ -214,23 +220,30 @@ public class GetImage621Main implements Processable {
 
             if (J.getString("status").equals("failed")) {
                 retry++;
-                System.out.println("621 tx failed");
+                //System.out.println("621 tx failed");
                 if (retry >= 3) {
                     Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
+                    Main.setNextLog("621 at group " + group_id + " by " + user_id + " but tencent catch it and retry = " + retry, 1);
                 } else {
                     this.process(message_type, "621" + message, group_id, user_id, message_id);
                 }
             } else {
                 lastMsg = J.getJSONObject("data").getLong("message_id");
                 retry = 0;
+                Main.setNextLog("621 at group " + group_id + " by " + user_id, 0);
             }
         } else {
             try {
                 long poolID = getPoolID(J2.getJSONArray("posts").getJSONObject(0));
                 String quest3 = "https://e621.net/pools.json?search[id]=" + poolID;
                 JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get(quest3, userName, true, authorKey));
-                List<Integer> postIDs = JA.getJSONObject(0).getJSONArray("post_ids").toJavaList(Integer.class);
+                J=JA.getJSONObject(0);
+                List<Integer> postIDs = J.getJSONArray("post_ids").toJavaList(Integer.class);
                 StringBuilder msg = new StringBuilder("转发\n");
+                msg.append(Main.botQQ).append(" ").append(J.getString("category")).append(": ").append(J.getString("name")).append("\n");
+                msg.append(Main.botQQ).append(" 合并行\n简介：").append(J.getString("description").formatted()).append("\n结束合并\n");
+                msg.append(Main.botQQ).append(" 共有 ").append(J.getLong("post_count")).append(" 张\n");
+                //System.out.println(msg);
                 for (int i = 0; i < postIDs.size(); i++) {
                     for (int j = 0; j < J2.getJSONArray("posts").size(); j++) {
                         if (Objects.equals(postIDs.get(i), J2.getJSONArray("posts").getJSONObject(j).getInteger("id"))) {
@@ -249,7 +262,9 @@ public class GetImage621Main implements Processable {
                 J.put("group_id", group_id);
                 Main.setNextOutput(J.toString());
                 retry = 0;
+                Main.setNextLog("621 at group " + group_id + " by " + user_id, 0);
             } catch (SocketTimeoutException e) {
+                Main.setNextLog("621 at group " + group_id + " by " + user_id + " Runtime Error", 2);
                 throw new RuntimeException(e);
             }
         }
@@ -284,7 +299,7 @@ public class GetImage621Main implements Processable {
         if (poolFlag && count == 50) quest.append("多于").append(count).append("个图片\n");
 
         int extPos = 0, tmpPos;
-        while ((tmpPos = imageUrl.indexOf(".", extPos)) != -1) extPos = tmpPos+1;
+        while ((tmpPos = imageUrl.indexOf(".", extPos)) != -1) extPos = tmpPos + 1;
         String fileExt = imageUrl.substring(extPos);
         String imageLocalPath = String.valueOf(id) + '.' + fileExt;
         if (!new File("resource/download/e621/" + imageLocalPath).exists()) {

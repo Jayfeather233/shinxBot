@@ -43,6 +43,7 @@ public class Auto114514Main implements Processable {
                 return;
             }
             Main.setNextSender(message_type, user_id, group_id, "" + num + " = " + getAns(num));
+            Main.setNextLog("Auto114514 at group " + group_id + " by "+user_id,0);
         } catch (NumberFormatException e) {
             Main.setNextSender(message_type, user_id, group_id, "需要一个数字，这事数字吗（恼）");
         }

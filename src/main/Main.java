@@ -23,6 +23,7 @@ import httpconnect.HttpURLConnectionUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -31,6 +32,8 @@ public class Main {
     private static final Map<Long, String> userName = new HashMap<>();
     private static final ArrayList<Processable> features = new ArrayList<>();
     private static final ArrayList<EventProcessable> events = new ArrayList<>();
+    private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final String[] logLevel = {"INFO", "WARNING", "ERROR"};
     public static int sendPort;
     public static int receivePort;
     public static long botQQ;
@@ -120,6 +123,16 @@ public class Main {
         J.put("group_id", group_id);
         J.put("user_id", user_id);
         return setNextSender("send_msg", J);
+    }
+
+    /*
+    level:
+        0-info
+        1-warning
+        2-error
+     */
+    public synchronized static void setNextLog(String log, int level) {
+        System.out.println("[" + logFormatter.format(new Date()) + "] [" + logLevel[level] + "]: " + log);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {

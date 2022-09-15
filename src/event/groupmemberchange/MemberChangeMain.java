@@ -10,10 +10,14 @@ public class MemberChangeMain implements EventProcessable {
         String name = Main.getName(J.getLong("user_id"));
         if (name == null) name = Main.getUserName(J.getLong("group_id"), J.getLong("user_id"));
         name = name + " (" + J.getLong("user_id") + ")";
-        if (J.getString("notice_type").equals("group_decrease"))
+        if (J.getString("notice_type").equals("group_decrease")) {
             Main.setNextSender("group", 0, J.getLong("group_id"), name + "离开了我们……");
-        if (J.getString("notice_type").equals("group_increase"))
+            Main.setNextLog(J.getLong("user_id") + " leave group " + J.getLong("group_id"), 0);
+        }
+        if (J.getString("notice_type").equals("group_increase")) {
             Main.setNextSender("group", 0, J.getLong("group_id"), "欢迎 " + name + " 的加入");
+            Main.setNextLog(J.getLong("user_id") + " get in group " + J.getLong("group_id"), 0);
+        }
     }
 
     @Override

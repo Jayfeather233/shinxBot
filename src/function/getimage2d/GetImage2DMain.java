@@ -14,8 +14,10 @@ public class GetImage2DMain implements Processable {
         try {
             JSONObject J = JSONObject.parseObject(HttpURLConnectionUtil.doGet("https://www.dmoe.cc/random.php?return=json"));
             Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=" + J.getString("imgurl") + ",id=40000]");
+            Main.setNextLog("Auto2DAnimateImg at group " + group_id + " by "+user_id,0);
         } catch (SocketTimeoutException e) {
             Main.setNextSender(message_type, user_id, group_id, "网站链接超时");
+            Main.setNextLog("Auto2DAnimateImg at group " + group_id + " by "+user_id + " Connected Time Out",2);
         }
     }
 

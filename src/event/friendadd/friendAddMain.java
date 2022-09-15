@@ -12,6 +12,7 @@ public class friendAddMain implements EventProcessable {
         Js.put("approve", true);
         Main.setNextSender("set_friend_add_request", Js);
         Main.getFriendSet().add(J.getLong("user_id"));
+        Main.setNextLog("Add a friend:" + J.getLong("user_id"),0);
     }
 
     @Override

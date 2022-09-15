@@ -95,9 +95,11 @@ public class AutoForwardGeneratorMain implements Processable {
         if (message_type.equals("group")) {
             J.put("group_id", group_id);
             Main.setNextSender("send_group_forward_msg", J);
+            Main.setNextLog("AutoForward at group " + group_id + " by "+user_id,0);
         } else {
             J.put("user_id", user_id);
             Main.setNextSender("send_private_forward_msg", J);
+            Main.setNextLog("AutoForward at private by "+user_id,0);
         }
     }
 

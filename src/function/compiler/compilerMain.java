@@ -74,6 +74,7 @@ public class compilerMain implements Processable {
             }
             default -> {
                 Main.setNextSender(message_type, user_id, group_id, "不支持的语言类型");
+                Main.setNextLog("Compiler at group " + group_id + " by "+user_id + " unsupported language " + language,0);
                 return;
             }
         }
@@ -90,11 +91,13 @@ public class compilerMain implements Processable {
 
         if (J.containsKey("error")) {
             Main.setNextSender(message_type, user_id, group_id, J.getString("error"));
+            Main.setNextLog("Compiler at group " + group_id + " by "+user_id + " error",1);
         } else {
             Main.setNextSender(message_type, user_id, group_id,
                     "输出：" + J.getString("output") + '\n'
                             + "内存：" + J.getString("memory") + '\n'
                             + "CPU时间：" + J.getString("cpuTime"));
+            Main.setNextLog("Compiler at group " + group_id + " by "+user_id,0);
         }
     }
 
