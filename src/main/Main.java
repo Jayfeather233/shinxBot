@@ -19,6 +19,8 @@ import function.nonogram.nonogram;
 import function.randomColor.randomColorMain;
 import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
+import interfaces.EventProcessable;
+import interfaces.Processable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,8 +32,8 @@ import java.util.*;
 public class Main {
     private static final Set<Long> friendSet = new HashSet<>();
     private static final Map<Long, String> userName = new HashMap<>();
-    private static final ArrayList<Processable> features = new ArrayList<>();
-    private static final ArrayList<EventProcessable> events = new ArrayList<>();
+    private static final ArrayList<interfaces.Processable> features = new ArrayList<>();
+    private static final ArrayList<interfaces.EventProcessable> events = new ArrayList<>();
     private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String[] logLevel = {"INFO", "WARNING", "ERROR"};
     public static int sendPort;
@@ -90,7 +92,7 @@ public class Main {
                 }
             } else if (message.equals("bot.help")) {
                 StringBuilder sb = new StringBuilder();
-                for (Processable game : features) {
+                for (interfaces.Processable game : features) {
                     if (game.help() != null)
                         sb.append(game.help()).append('\n');
                 }
@@ -183,24 +185,22 @@ public class Main {
         Go_Listener Listen = new Go_Listener();
         Thread R1 = new Thread(Listen);
         R1.start();
-        System.out.println("end.");
         JSONObject J_input;
-        J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
-        botQQ = J_input.getJSONObject("data").getLong("user_id");
-        System.out.println("QQ:" + botQQ);
 
         boolean flg = true;
-        JSONArray JA = null;
         while (flg) {
             flg = false;
             try {
-                J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_friend_list", null)).toString());
-                JA = J_input.getJSONArray("data");
+                J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
+                botQQ = J_input.getJSONObject("data").getLong("user_id");
             } catch (NullPointerException e) {
                 flg = true;
             }
             Thread.sleep(10000);
         }
+        System.out.println("QQ:" + botQQ);
+        J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_friend_list", null)).toString());
+        JSONArray JA = J_input.getJSONArray("data");
         for (Object o : JA) {
             friendSet.add(((JSONObject) o).getLong("user_id"));
         }

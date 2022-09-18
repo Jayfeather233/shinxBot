@@ -1,4 +1,4 @@
-package main;
+package interfaces;
 
 import com.alibaba.fastjson.JSONObject;
 

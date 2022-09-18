@@ -1,7 +1,7 @@
 package function.guess;
 
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.util.HashMap;
 import java.util.Map;

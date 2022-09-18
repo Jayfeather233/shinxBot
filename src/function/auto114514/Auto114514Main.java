@@ -1,7 +1,7 @@
 package function.auto114514;
 
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

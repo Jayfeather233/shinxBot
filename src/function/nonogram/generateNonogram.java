@@ -3,7 +3,7 @@ package function.nonogram;
 import function.imageGenerator.ImageGeneratorMain;
 import utils.ImageDownloader;
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

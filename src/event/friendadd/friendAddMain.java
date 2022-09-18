@@ -1,7 +1,7 @@
 package event.friendadd;
 
 import com.alibaba.fastjson.JSONObject;
-import main.EventProcessable;
+import interfaces.EventProcessable;
 import main.Main;
 
 public class friendAddMain implements EventProcessable {

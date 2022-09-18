@@ -1,6 +1,6 @@
 package function.deliver;
 
-import main.Processable;
+import interfaces.Processable;
 
 import java.io.FileReader;
 import java.io.IOException;

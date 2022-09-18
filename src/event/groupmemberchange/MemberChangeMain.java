@@ -1,7 +1,7 @@
 package event.groupmemberchange;
 
 import com.alibaba.fastjson.JSONObject;
-import main.EventProcessable;
+import interfaces.EventProcessable;
 import main.Main;
 
 public class MemberChangeMain implements EventProcessable {

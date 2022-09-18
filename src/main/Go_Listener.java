@@ -56,7 +56,6 @@ public class Go_Listener implements Runnable {
     public void run() {
         try {
             ServerSocket serverSock = new ServerSocket(receivePort);
-            System.out.println("start.");
             while (true) {//端口监听，多线程操作
                 Socket socket = serverSock.accept();
                 //System.out.println("Accepted.");

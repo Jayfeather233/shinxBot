@@ -1,7 +1,7 @@
 package function.randomColor;
 
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 import utils.ImageDownloader;
 
 import java.awt.*;

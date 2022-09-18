@@ -3,7 +3,7 @@ package function.compiler;
 import com.alibaba.fastjson.JSONObject;
 import httpconnect.HttpURLConnectionUtil;
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.io.*;
 import java.util.Objects;

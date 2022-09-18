@@ -2,7 +2,7 @@ package function.autoreply;
 
 import com.alibaba.fastjson.JSONObject;
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.io.*;
 import java.util.Scanner;

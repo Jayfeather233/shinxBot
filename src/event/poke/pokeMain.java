@@ -1,7 +1,7 @@
 package event.poke;
 
 import com.alibaba.fastjson.JSONObject;
-import main.EventProcessable;
+import interfaces.EventProcessable;
 import main.Main;
 
 import java.util.Random;

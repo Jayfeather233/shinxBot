@@ -1,4 +1,4 @@
-package main;
+package interfaces;
 
 public interface Processable {
     void process(String message_type, String message, long group_id, long user_id, int message_id);

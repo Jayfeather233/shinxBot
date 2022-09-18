@@ -3,7 +3,7 @@ package function.getimage2d;
 import com.alibaba.fastjson.JSONObject;
 import httpconnect.HttpURLConnectionUtil;
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.net.SocketTimeoutException;
 

@@ -1,6 +1,6 @@
 package function.uno;
 
-import main.Processable;
+import interfaces.Processable;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,7 +3,7 @@ package function.autoForwardGenerator;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import main.Main;
-import main.Processable;
+import interfaces.Processable;
 
 import java.util.Scanner;
 
