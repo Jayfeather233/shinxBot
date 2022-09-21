@@ -3,8 +3,8 @@ package function.getImage621;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import httpconnect.HttpURLConnectionUtil;
-import main.Main;
 import interfaces.Processable;
+import main.Main;
 import utils.ImageDownloader;
 
 import java.io.*;
@@ -129,9 +129,8 @@ public class GetImage621Main implements Processable {
                                 5: explicit""");
             return;
         }
-        if (message.startsWith("621.tag")) {
-            if (message.startsWith("621.tags")) message = message.substring(8).trim();
-            else message = message.substring(7).trim();
+        if (message.startsWith("621.autocomplete")) {
+            message = message.substring(16).trim();
             try {
                 JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get("https://e621.net/tags/autocomplete.json?search[name_matches]=" + message + "&expiry=7", userName, false, null));
 
@@ -169,6 +168,13 @@ public class GetImage621Main implements Processable {
         }
 
         message = message.substring(3);
+
+        boolean getTag = false;
+        if (message.startsWith(".tag")) {
+            if (message.startsWith(".tags")) message = message.substring(5).trim();
+            else message = message.substring(4).trim();
+            getTag = true;
+        }
         StringBuilder quest = dealInput(message, level, poolFlag);
         StringBuilder quest2 = new StringBuilder(quest);
 
@@ -214,10 +220,13 @@ public class GetImage621Main implements Processable {
 
         if (!poolFlag) {
             J = J.getJSONArray("posts").getJSONObject(0);
-
-            J = JSONObject.parseObject(String.valueOf(
-                    Main.setNextSender(message_type, user_id, group_id, getImageInfo(J, count, poolFlag))));
-
+            if(getTag){
+                J = JSONObject.parseObject(String.valueOf(
+                        Main.setNextSender(message_type, user_id, group_id, getImageTags(J))));
+            } else {
+                J = JSONObject.parseObject(String.valueOf(
+                        Main.setNextSender(message_type, user_id, group_id, getImageInfo(J, count, poolFlag))));
+            }
             if (J.getString("status").equals("failed")) {
                 retry++;
                 //System.out.println("621 tx failed");
@@ -237,7 +246,7 @@ public class GetImage621Main implements Processable {
                 long poolID = getPoolID(J2.getJSONArray("posts").getJSONObject(0));
                 String quest3 = "https://e621.net/pools.json?search[id]=" + poolID;
                 JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get(quest3, userName, true, authorKey));
-                J=JA.getJSONObject(0);
+                J = JA.getJSONObject(0);
                 List<Integer> postIDs = J.getJSONArray("post_ids").toJavaList(Integer.class);
                 StringBuilder msg = new StringBuilder("转发\n");
                 msg.append(Main.botQQ).append(" ").append(J.getString("category")).append(": ").append(J.getString("name")).append("\n");
@@ -268,6 +277,21 @@ public class GetImage621Main implements Processable {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private String getImageTags(JSONObject img) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("artist:");
+        for(String u : img.getJSONObject("tags").getJSONArray("artist").toJavaList(String.class)) sb.append(' ').append(u);
+        sb.append('\n');
+        sb.append("character:");
+        for(String u : img.getJSONObject("tags").getJSONArray("character").toJavaList(String.class)) sb.append(' ').append(u);
+        sb.append('\n');
+        sb.append("species:");
+        for(String u : img.getJSONObject("tags").getJSONArray("species").toJavaList(String.class)) sb.append(' ').append(u);
+        sb.append('\n');
+
+        return sb.toString();
     }
 
     private long getPoolID(JSONObject posts) {

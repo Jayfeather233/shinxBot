@@ -166,7 +166,7 @@ public class HttpURLConnectionUtil {
             connection.setRequestMethod("POST");
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(true);
-            if (obj != null) connection.setRequestProperty("Content-Type", "application/json;");
+            if (obj != null) connection.setRequestProperty("Content-Type", "application/json");
 
             connection.connect();
 

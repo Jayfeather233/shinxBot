@@ -14,6 +14,7 @@ import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
 import function.guess.GuessGameMain;
 import function.imageGenerator.ImageGeneratorMain;
+import function.nbnhhsh.HhshMain;
 import function.nonogram.generateNonogram;
 import function.nonogram.nonogram;
 import function.randomColor.randomColorMain;
@@ -153,6 +154,7 @@ public class Main {
         features.add(new nonogram());
         features.add(new generateNonogram());
         features.add(new randomColorMain());
+        features.add(new HhshMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
