@@ -23,12 +23,16 @@ public class HhshMain implements Processable {
             if (flg) sb.append('\n');
             J = (JSONObject) o;
             if (J.containsKey("inputting")) {
-                sb.append(J.getString("name")).append("有可能是\n");
-                int t = 0;
-                for (String s : J.getJSONArray("inputting").toJavaList(String.class)) {
-                    sb.append(s).append("  ");
-                    t++;
-                    if (t == 3) break;
+                if(J.getJSONArray("inputting").size()==0){
+                    sb.append(J.getString("name")).append("尚未录入");
+                } else {
+                    sb.append(J.getString("name")).append("有可能是\n");
+                    int t = 0;
+                    for (String s : J.getJSONArray("inputting").toJavaList(String.class)) {
+                        sb.append(s).append("  ");
+                        t++;
+                        if (t == 3) break;
+                    }
                 }
             } else if (J.containsKey("trans")) {
                 if (J.getString("trans") == null) {
