@@ -14,7 +14,9 @@
 - 关键词回复
 - 群成员变动提醒
 - 在线编译代码
-- 数织游戏
+- 数织游戏：手写识别
+- 来点色图：随机色卡
+- 首字母缩写识别，来源：[itorr](https://github.com/itorr/nbnhhsh)
 
 ### 关于源文件
 
@@ -23,7 +25,8 @@ main/Main.java 为入口。
 - src/main：包含Main.java和其他文件，用于给go-cqhttp分发消息。
 - src/function：包含所有用于处理QQ消息的java文件。
 - src/event：包含所有用于处理QQ事件的java文件。(event事件传入整个JSON消息)
-- src/httpconnect：用于通过HTTP与go-cqhttp连接的文件以及用于下载图片的文件。
+- src/httpconnect：用于通过HTTP与go-cqhttp连接和访问其他API的文件
+- src/utils：用于下载图片的文件。
 - lib：jar库。包含：支持JSON (Alibaba.fastjson)
 
 ### 如何运行这个机器人
@@ -34,9 +37,9 @@ main/Main.java 为入口。
 
 ### 如何添加新功能
 
-1. 在function或game下创建java文件并implement一个接口文件src/main/Processable
+1. 在function或game下创建java文件并implement一个接口文件src/interfaces/Processable
 
-    或者在event下创建java文件并implement一个接口文件src/main/EventProcessable
+    或者在event下创建java文件并implement一个接口文件src/interfaces/EventProcessable
 2. 写好check和process方法。check返回true的时候就会执行process方法。
 3. 在main.Main.main()函数中加入 features/events.add(new yourClassName());就行了。
 
@@ -56,7 +59,9 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 - Keywords reply.
 - React to group member change.
 - Online compiler.
-- Nonogram.
+- Nonogram with handwriting.
+- Random color picture.
+- Acronym identification. From [itorr](https://github.com/itorr/nbnhhsh).
 
 ### About the source files
 
@@ -65,7 +70,8 @@ The main/Main.java is the starting point.
 - src/main: contains main.java and other files to distribute message with go-cqhttp.
 - src/function: contains all java files to process the QQ Message.
 - src/event: contains all java files to process the QQ events. (Will send entire JSON message as parameter)
-- src/httpconnect: files used to connect with go-cqhttp through HTTP and files for download images.
+- src/httpconnect: files used to connect with go-cqhttp or other APIs through HTTP.
+- src/utils: files used to download pictures via http.
 - lib: libraries. Contains: support files for JSON. (Alibaba.fastjson)
 
 ### How to run the bot
@@ -76,8 +82,8 @@ The main/Main.java is the starting point.
 
 ### How to add new features
 
-1. Create a java file under function or game directory and implement an interface file src/main/Processable
+1. Create a java file under function or game directory and implement an interface file src/interfaces/Processable
 
-   Or create under event and implement an interface file src/main/EventProcessable
+   Or create under event and implement an interface file src/interfaces/EventProcessable
 2. Write check and process methods. The process method will be executed when check returns true.
 3. Add features/events.add(new yourClassName()); in the main.Main.main() Method.
