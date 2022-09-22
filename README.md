@@ -6,7 +6,7 @@
 
 - 在QQ群里玩UNO游戏。
 - 在群或私聊里玩猜数字游戏。
-- 模拟PokémonCaféReMix的外送。
+- 模拟PokémonCaféReMix的外送。（数据未更新）
 - 在群或私聊中生成一个假的转发信息。
 - 生成一张 水布想要 的图片
 - 恶臭数字论证器，来源：[itorr](https://github.com/itorr/homo)
