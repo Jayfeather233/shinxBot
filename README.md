@@ -37,11 +37,12 @@ main/Main.java 为入口。
 
 ### 如何添加新功能
 
-1. 在function或game下创建java文件并implement一个接口文件src/interfaces/Processable
+1. 在function下创建java文件并implement一个接口文件src/interfaces/Processable
 
     或者在event下创建java文件并implement一个接口文件src/interfaces/EventProcessable
 2. 写好check和process方法。check返回true的时候就会执行process方法。
-3. 在main.Main.main()函数中加入 features/events.add(new yourClassName());就行了。
+3. 写好help方法，为功能使用指引。
+4. 在main.Main.main()函数中加入 features/events.add(new yourClassName());就行了。
 
 ## English version
 
@@ -82,8 +83,9 @@ The main/Main.java is the starting point.
 
 ### How to add new features
 
-1. Create a java file under function or game directory and implement an interface file src/interfaces/Processable
+1. Create a java file under function directory and implement an interface file src/interfaces/Processable
 
    Or create under event and implement an interface file src/interfaces/EventProcessable
 2. Write check and process methods. The process method will be executed when check returns true.
-3. Add features/events.add(new yourClassName()); in the main.Main.main() Method.
+3. Write help methods to guide the use of the function.
+4. Add features/events.add(new yourClassName()); in the main.Main.main() Method.
