@@ -10,7 +10,7 @@
 - 在群或私聊中生成一个假的转发信息。
 - 生成一张 水布想要 的图片
 - 恶臭数字论证器，来源：[itorr](https://github.com/itorr/homo)
-- 来点二次元，来源：[dmoe](https://www.dmoe.cc)
+- 来点二次元，似乎JSON API已失效。来源：[dmoe](https://www.dmoe.cc)
 - 关键词回复
 - 群成员变动提醒
 - 在线编译代码
@@ -51,11 +51,11 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 
 - Play UNO game in QQ groups.
 - Play a guess number game in group or private.
-- Simulate the delivery system of PokémonCaféReMix.
+- Simulate the delivery system of PokémonCaféReMix. (not updated)
 - Generate a fake forward message in a group or private.
 - Generate a Vaporeon image.
 - Homo number generator. From [itorr](https://github.com/itorr/homo).
-- Get Japanese anime image. From [dmoe](https://www.dmoe.cc).
+- Get Japanese anime image, it seems that json API has failed. From [dmoe](https://www.dmoe.cc).
 - Keywords reply.
 - React to group member change.
 - Online compiler.
