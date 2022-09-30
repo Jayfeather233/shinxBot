@@ -196,7 +196,8 @@ public class GetImage621Main implements Processable {
                 Main.setNextSender(message_type, user_id, group_id, "网络不通畅发送图片失败");
                 Main.setNextLog("621 at group " + group_id + " by " + user_id + " but SocketTimeOut and retry = " + retry, 2);
             } else {
-                this.process(message_type, "621" + message, group_id, user_id, message_id);
+                if(getTag) this.process(message_type, "621.tag " + message, group_id, user_id, message_id);
+                else this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
             return;
         }
@@ -207,7 +208,8 @@ public class GetImage621Main implements Processable {
                 Main.setNextSender(message_type, user_id, group_id, "奇怪原因发送图片失败");
                 Main.setNextLog("621 at group " + group_id + " by " + user_id + " but unknown reason and retry = " + retry, 2);
             } else {
-                this.process(message_type, "621" + message, group_id, user_id, message_id);
+                if(getTag) this.process(message_type, "621.tag " + message, group_id, user_id, message_id);
+                else this.process(message_type, "621" + message, group_id, user_id, message_id);
             }
             return;
         }
@@ -234,7 +236,8 @@ public class GetImage621Main implements Processable {
                     Main.setNextSender(message_type, user_id, group_id, "tx原因发送图片失败");
                     Main.setNextLog("621 at group " + group_id + " by " + user_id + " but tencent catch it and retry = " + retry, 1);
                 } else {
-                    this.process(message_type, "621" + message, group_id, user_id, message_id);
+                    if(getTag) this.process(message_type, "621.tag " + message, group_id, user_id, message_id);
+                    else this.process(message_type, "621" + message, group_id, user_id, message_id);
                 }
             } else {
                 lastMsg = J.getJSONObject("data").getLong("message_id");

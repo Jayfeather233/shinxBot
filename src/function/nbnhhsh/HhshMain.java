@@ -31,7 +31,7 @@ public class HhshMain implements Processable {
                     for (String s : J.getJSONArray("inputting").toJavaList(String.class)) {
                         sb.append(s).append("  ");
                         t++;
-                        if (t == 3) break;
+                        if (t == 10) break;
                     }
                 }
             } else if (J.containsKey("trans")) {
@@ -43,7 +43,7 @@ public class HhshMain implements Processable {
                     for (String s : J.getJSONArray("trans").toJavaList(String.class)) {
                         sb.append(s).append("  ");
                         t++;
-                        if (t == 3) break;
+                        if (t == 10) break;
                     }
                 }
             } else {
