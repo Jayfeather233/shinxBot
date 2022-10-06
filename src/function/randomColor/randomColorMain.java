@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import static main.Main.localPath;
+
 public class randomColorMain implements Processable {
 
     String int_to_hex = "0123456789ABCDEF";
@@ -55,7 +57,7 @@ public class randomColorMain implements Processable {
         G.drawString("#" + text, (w - rec.width) / 2, (h + rec.height) / 2);
         try {
             ImageDownloader.saveImg(buffImg, "png", "./resource/temp/" + text + ".png");
-            Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=file:///" + new File("").getCanonicalPath() + "/resource/temp/" + text + ".png]");
+            Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=file:///" + localPath + "/resource/temp/" + text + ".png]");
         } catch (IOException e) {
             Main.setNextSender(message_type, user_id, group_id, "图片生成错误，请重试");
         }

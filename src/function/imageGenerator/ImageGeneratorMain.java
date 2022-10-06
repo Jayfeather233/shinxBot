@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static main.Main.localPath;
+
 public class ImageGeneratorMain implements Processable {
 
     @Override
@@ -96,11 +98,7 @@ public class ImageGeneratorMain implements Processable {
             //840 90
             //1560 460
         }
-        try {
-            Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=file:///" + new File("").getCanonicalPath() + "/resource/generate/" + fileName + "]");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Main.setNextSender(message_type, user_id, group_id, "[CQ:image,file=file:///" + localPath + "/resource/generate/" + fileName + "]");
         Main.setNextLog("ImgGenerator at group " + group_id + " by " + user_id, 0);
     }
 

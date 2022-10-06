@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
+import static main.Main.localPath;
+
 class pair {
     int diff, id;
 
@@ -80,11 +82,8 @@ public class nonogram implements Processable {
                 int id = idMap.get(user_id).id;
                 pair u = getGameID(Integer.parseInt(message));
                 idMap.put(user_id, u);
-                Main.setNextSender(message_type, user_id, group_id, "[CQ:reply,id=" + id + "] [CQ:image,file=file:///" + new File("").getCanonicalPath() + generateNonogram(u) + "]");
+                Main.setNextSender(message_type, user_id, group_id, "[CQ:reply,id=" + id + "] [CQ:image,file=file:///" + localPath + generateNonogram(u) + "]");
             } catch (NumberFormatException e) {
-                return;
-            } catch (IOException e) {
-                Main.setNextSender(message_type, user_id, group_id, "生成图片出错");
                 return;
             }
         }
@@ -133,11 +132,7 @@ public class nonogram implements Processable {
         if (!file.exists()) {
             return "";
         } else {
-            try {
-                return "\n[CQ:image,file=file:///" + new File("").getCanonicalPath() + "/resource/nonogram/" + u.diff + "/color" + u.id + ".png]";
-            } catch (IOException e) {
-                return "";
-            }
+            return "\n[CQ:image,file=file:///" + localPath + "/resource/nonogram/" + u.diff + "/color" + u.id + ".png]";
         }
     }
 

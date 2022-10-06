@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static main.Main.localPath;
+
 public class GetImage621Main implements Processable {
 
     String userName, authorKey;
@@ -334,11 +336,8 @@ public class GetImage621Main implements Processable {
         }
         ImageDownloader.addRandomNoise("resource/download/e621/" + imageLocalPath, fileExt);
 
-        try {
-            quest.append("[CQ:image,file=file:///").append(new File("").getCanonicalPath()).append("/resource/download/e621/").append(imageLocalPath).append(",id=40000]\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        quest.append("[CQ:image,file=file:///").append(localPath).append("/resource/download/e621/").append(imageLocalPath).append(",id=40000]\n");
+
         quest.append("Fav_count: ").append(fav_count).append("  ");
         quest.append("Score: ").append(score).append("\n");
 

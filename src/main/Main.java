@@ -14,6 +14,7 @@ import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
 import function.guess.GuessGameMain;
 import function.imageGenerator.ImageGeneratorMain;
+import function.mysd.sdMain;
 import function.nbnhhsh.HhshMain;
 import function.nonogram.generateNonogram;
 import function.nonogram.nonogram;
@@ -40,6 +41,7 @@ public class Main {
     public static int sendPort;
     public static int receivePort;
     public static long botQQ;
+    public static String localPath;
 
     public static Set<Long> getFriendSet() {
         return friendSet;
@@ -140,6 +142,8 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
+        localPath = new File("").getCanonicalPath();
+
         System.setProperty("java.net.useSystemProxies", "true");
         features.add(new UNOMain());
         features.add(new AutoForwardGeneratorMain());
@@ -155,6 +159,7 @@ public class Main {
         features.add(new generateNonogram());
         features.add(new randomColorMain());
         features.add(new HhshMain());
+        features.add(new sdMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
