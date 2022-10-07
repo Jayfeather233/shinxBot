@@ -10,13 +10,14 @@
 - 在群或私聊中生成一个假的转发信息。
 - 生成一张 水布想要 的图片
 - 恶臭数字论证器，来源：[itorr](https://github.com/itorr/homo)
-- 来点二次元，似乎JSON API已失效。来源：[dmoe](https://www.dmoe.cc)
+- 来点二次元。来源：[dmoe](https://www.dmoe.cc)
 - 关键词回复
 - 群成员变动提醒
 - 在线编译代码
 - 数织游戏：手写识别
 - 来点色图：随机色卡
 - 首字母缩写识别，来源：[itorr](https://github.com/itorr/nbnhhsh)
+- 与[Stable Diffusion WebUI](https://github.com/sd-webui/stable-diffusion-webui)对接，在群内生成图片
 
 ### 关于源文件
 
@@ -26,8 +27,8 @@ main/Main.java 为入口。
 - src/function：包含所有用于处理QQ消息的java文件。
 - src/event：包含所有用于处理QQ事件的java文件。(event事件传入整个JSON消息)
 - src/httpconnect：用于通过HTTP与go-cqhttp连接和访问其他API的文件
-- src/utils：用于下载图片的文件。
-- lib：jar库。包含：支持JSON (Alibaba.fastjson)
+- src/utils：用于下载图片和保存图片的文件。
+- lib：jar库。包含：JSON (Alibaba.fastjson)
 
 ### 如何运行这个机器人
 
@@ -56,13 +57,14 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 - Generate a fake forward message in a group or private.
 - Generate a Vaporeon image.
 - Homo number generator. From [itorr](https://github.com/itorr/homo).
-- Get Japanese anime image, it seems that json API has failed. From [dmoe](https://www.dmoe.cc).
+- Get Japanese anime image. From [dmoe](https://www.dmoe.cc).
 - Keywords reply.
 - React to group member change.
 - Online compiler.
 - Nonogram with handwriting.
 - Random color picture.
 - Acronym identification. From [itorr](https://github.com/itorr/nbnhhsh).
+- Work with [Stable Diffusion WebUI](https://github.com/sd-webui/stable-diffusion-webui) to generate picture and send via QQ.
 
 ### About the source files
 

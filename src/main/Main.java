@@ -10,6 +10,7 @@ import function.autoForwardGenerator.AutoForwardGeneratorMain;
 import function.autoreply.AutoReplyMain;
 import function.compiler.compilerMain;
 import function.deliver.DeliverMain;
+import function.fudu.fuduMain;
 import function.getImage621.GetImage621Main;
 import function.getimage2d.GetImage2DMain;
 import function.guess.GuessGameMain;
@@ -47,12 +48,12 @@ public class Main {
         return friendSet;
     }
 
-    public synchronized static String getName(long ID) {
+    public static String getName(long ID) {
         return userName.get(ID);
     }
 
 
-    public synchronized static void setNextOutput(String input) {//收到传来的EVENT的JSON数据处理
+    public static void setNextOutput(String input) {//收到传来的EVENT的JSON数据处理
         JSONObject J_input = JSONObject.parseObject(input);
         String post_type = J_input.getString("post_type");
         String uName = null;
@@ -95,7 +96,7 @@ public class Main {
                 }
             } else if (message.equals("bot.help")) {
                 StringBuilder sb = new StringBuilder();
-                for (interfaces.Processable game : features) {
+                for (Processable game : features) {
                     if (game.help() != null)
                         sb.append(game.help()).append('\n');
                 }
@@ -160,6 +161,7 @@ public class Main {
         features.add(new randomColorMain());
         features.add(new HhshMain());
         features.add(new sdMain());
+        features.add(new fuduMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());

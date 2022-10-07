@@ -14,6 +14,11 @@ import static main.Main.setNextLog;
 import static utils.saveImg.saveBase64Img;
 
 public class sdMain implements Processable {
+
+    static private boolean state = true;
+
+    static private String hashCodex;
+
     private final JSONArray pattern = JSONArray.parseArray("""
             [
             "",
@@ -61,6 +66,15 @@ public class sdMain implements Processable {
                             """);
             return;
         }
+        if(message.equals("sd.on")){
+            state = true;
+            return;
+        }
+        if(message.equals("sd.off")){
+            state = false;
+            return;
+        }
+        if(!state) return;
         String[] ps = message.substring(2).split(" ");
         StringBuilder prompt = new StringBuilder();
         boolean flg = false;
@@ -110,12 +124,17 @@ public class sdMain implements Processable {
         ja.set(8, CF);
         ja.set(10, H);
         ja.set(11, W);
-        String hashCodex = String.valueOf(Math.abs(ja.hashCode()));
+        if(hashCodex != null){
+            Main.setNextSender(message_type,user_id,group_id,"有任务进行中，请稍后重试");
+            return;
+        }
+        hashCodex = String.valueOf(Math.abs(ja.hashCode()));
         ja.set(15, hashCodex);
-        JSONArray hashCode = new JSONArray();
-        hashCode.set(0, hashCodex);
 
         Main.setNextSender(message_type,user_id,group_id,"正在生成中...");
+
+        JSONArray hashCode = new JSONArray();
+        hashCode.set(0, hashCodex);
         JSONObject J = new JSONObject();
         J.put("data", ja);
         J.put("fn_index", 14);
@@ -123,6 +142,7 @@ public class sdMain implements Processable {
         String rs = String.valueOf(HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J));
         if(Objects.equals(rs, "null")){
             Main.setNextSender(message_type,user_id,group_id,"程序在重启或已关闭。");
+            return;
         }
         J.put("data", hashCode);
         J.put("fn_index", 13);
@@ -149,6 +169,7 @@ public class sdMain implements Processable {
                 sb.append("[CQ:image,file=file:///").append(localPath).append(saveBase64Img(s)).append(",id=40000]\n");
             }
         }
+        hashCodex = null;
 
         setNextLog("Stable Diffusion at group " + group_id + " by " + user_id + " input: " + message, 0);
         Main.setNextSender(message_type, user_id, group_id, sb.toString());
@@ -156,7 +177,7 @@ public class sdMain implements Processable {
 
     @Override
     public boolean check(String message_type, String message, long group_id, long user_id) {
-        return message.startsWith("sd") /*&& (group_id == 1011383394 || user_id == 1826559889)*/;
+        return message.startsWith("sd");
     }
 
     @Override

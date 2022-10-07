@@ -193,9 +193,8 @@ public class HttpURLConnectionUtil {
             return sb;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
-
     }
 
     private static List<Proxy> getProxyList(String url) {
