@@ -7,6 +7,7 @@ import interfaces.Processable;
 import main.Main;
 
 import java.util.Objects;
+import java.util.UnknownFormatConversionException;
 
 import static main.Main.localPath;
 import static main.Main.setNextLog;
@@ -62,12 +63,14 @@ public class sdMain implements Processable {
         }
         String[] ps = message.substring(2).split(" ");
         StringBuilder prompt = new StringBuilder();
+        boolean flg = false;
         int H = 256, W = 256, step = 50;
         double CF = 7.5;
         try {
             for (String s : ps) {
                 if (s.startsWith("prompt:")) {
                     prompt.append(s.substring(7));
+                    flg = true;
                 } else if (s.startsWith("H:")) {
                     H = Integer.parseInt(s.substring(2));
                 } else if (s.startsWith("W:")) {
@@ -80,6 +83,9 @@ public class sdMain implements Processable {
             }
         } catch (NumberFormatException e) {
             Main.setNextSender(message_type, user_id, group_id, "参数错误：不是数字");
+            return;
+        }
+        if(!flg){
             return;
         }
         if (H < 50 || W < 10) {
@@ -114,15 +120,22 @@ public class sdMain implements Processable {
         J.put("data", ja);
         J.put("fn_index", 14);
         J.put("session_hash", String.valueOf(J.hashCode()));
-        HttpURLConnectionUtil.doPost("http://localhost:7860/api/predict/", J);
+        String rs = String.valueOf(HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J));
+        if(Objects.equals(rs, "null")){
+            Main.setNextSender(message_type,user_id,group_id,"程序在重启或已关闭。");
+        }
         J.put("data", hashCode);
         J.put("fn_index", 13);
-        HttpURLConnectionUtil.doPost("http://localhost:7860/api/predict/", J);
+        HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J);
         J.put("fn_index", 12);
-        JSONObject mid = JSONObject.parseObject(Objects.requireNonNull(HttpURLConnectionUtil.doPost("http://localhost:7860/api/predict/", J)).toString());
-        Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)+"%").formatted());
+        JSONObject mid = JSONObject.parseObject(Objects.requireNonNull(HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J)).toString());
+        try{
+            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)+"%").formatted());
+        } catch (UnknownFormatConversionException e){
+            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)).formatted());
+        }
         J.put("fn_index", 11);
-        HttpURLConnectionUtil.doPost("http://localhost:7860/api/predict/", J);
+        HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J);
         J.put("fn_index", 4);
         J = JSONObject.parseObject(
                 Objects.requireNonNull(
@@ -143,7 +156,7 @@ public class sdMain implements Processable {
 
     @Override
     public boolean check(String message_type, String message, long group_id, long user_id) {
-        return message.startsWith("sd");
+        return message.startsWith("sd") /*&& (group_id == 1011383394 || user_id == 1826559889)*/;
     }
 
     @Override

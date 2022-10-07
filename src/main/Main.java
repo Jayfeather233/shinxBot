@@ -200,6 +200,7 @@ public class Main {
             try {
                 J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
                 botQQ = J_input.getJSONObject("data").getLong("user_id");
+                break;
             } catch (NullPointerException e) {
                 flg = true;
             }
