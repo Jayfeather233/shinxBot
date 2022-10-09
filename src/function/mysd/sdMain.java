@@ -196,6 +196,7 @@ public class sdMain implements Processable {
         } catch (UnknownFormatConversionException e){
             Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)).formatted());
         }
+        hashCodex = null;
         J.put("fn_index", 11);
         HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J);
         J.put("fn_index", 4);
@@ -211,7 +212,6 @@ public class sdMain implements Processable {
                 sb.append("[CQ:image,file=file:///").append(localPath).append(saveBase64Img(s)).append(",id=40000]\n");
             }
         }
-        hashCodex = null;
 
         setNextLog("Stable Diffusion at group " + group_id + " by " + user_id + " input: " + message, 0);
         Main.setNextSender(message_type, user_id, group_id, sb.toString());
