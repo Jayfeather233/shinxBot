@@ -28,6 +28,11 @@ public class GetImage621Main implements Processable {
             File ff = new File("621Level.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("621权限管理文件创建失败");
+                else {
+                    FileWriter fw = new FileWriter(ff);
+                    fw.write("{}");
+                    fw.close();
+                }
             }
             FileReader f = new FileReader("621Level.json");
             Scanner S = new Scanner(f);

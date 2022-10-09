@@ -6,7 +6,9 @@ import httpconnect.HttpURLConnectionUtil;
 import interfaces.Processable;
 import main.Main;
 
+import java.io.*;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.UnknownFormatConversionException;
 
 import static main.Main.localPath;
@@ -15,9 +17,11 @@ import static utils.saveImg.saveBase64Img;
 
 public class sdMain implements Processable {
 
-    static private boolean state = true;
+    static private int state = 2;
 
     static private String hashCodex;
+
+    private JSONArray groups;
 
     private final JSONArray pattern = JSONArray.parseArray("""
             [
@@ -47,6 +51,29 @@ public class sdMain implements Processable {
             """);
 
     public sdMain() {
+        try {
+            File ff = new File("sdLevel.json");
+            if (!ff.exists()) {
+                if (!ff.createNewFile()) System.out.println("sdLevel创建失败");
+                else {
+                    FileWriter fw = new FileWriter(ff);
+                    fw.write("{\"data\":[]}");
+                    fw.close();
+                }
+            }
+            FileReader f = new FileReader("sdLevel.json");
+            Scanner S = new Scanner(f);
+            StringBuilder sb = new StringBuilder();
+            while (S.hasNext()) {
+                sb.append(S.nextLine()).append(' ');
+            }
+
+            JSONObject J = JSONObject.parseObject(String.valueOf(sb));
+
+            groups = J.getJSONArray("data");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -59,26 +86,40 @@ public class sdMain implements Processable {
                             Stable Diffusion:
                                 sd prompt:xxx H:xxx W:xxx CF:xxx STEP:xxx
                             prompt: 提示词
-                            H: 图片高度，默认256 [50,512]
-                            W: 图片宽度，默认256 [50,512]
+                            H: 图片高度，默认320 [50,512]
+                            W: 图片宽度，默认512 [50,512]
                             CF: 多大依赖提示词，默认7.5 [2,10]
                             STEP: 生成步骤数，默认50 [0,150]
                             """);
             return;
         }
         if(message.equals("sd.on")){
-            state = true;
+            state = 2;
             return;
         }
         if(message.equals("sd.off")){
-            state = false;
+            state = 0;
             return;
         }
-        if(!state) return;
+        if(message.equals("sd.mid")){
+            state = 1;
+            return;
+        }
+        if(message.startsWith("sd.add")){
+            groups.add(Long.parseLong(message.substring(6).trim()));
+            try{
+                save();
+            } catch (IOException e){
+                Main.setNextSender(message_type,user_id,group_id,"文件保存失败");
+                Main.setNextLog("sd.add: 文件保存失败",1);
+            }
+            return;
+        }
+        if(state == 0 || (state == 1 && !groups.toJavaList(Long.class).contains(group_id))) return;
         String[] ps = message.substring(2).split(" ");
         StringBuilder prompt = new StringBuilder();
         boolean flg = false;
-        int H = 256, W = 256, step = 50;
+        int H = 320, W = 512, step = 50;
         double CF = 7.5;
         try {
             for (String s : ps) {
@@ -142,6 +183,7 @@ public class sdMain implements Processable {
         String rs = String.valueOf(HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J));
         if(Objects.equals(rs, "null")){
             Main.setNextSender(message_type,user_id,group_id,"程序在重启或已关闭。");
+            hashCodex = null;
             return;
         }
         J.put("data", hashCode);
@@ -173,6 +215,16 @@ public class sdMain implements Processable {
 
         setNextLog("Stable Diffusion at group " + group_id + " by " + user_id + " input: " + message, 0);
         Main.setNextSender(message_type, user_id, group_id, sb.toString());
+    }
+
+    private void save() throws IOException {
+        FileWriter fw = new FileWriter("sdLevel.json", false);
+        BufferedWriter bw = new BufferedWriter(fw);
+        JSONObject J = new JSONObject();
+        J.put("data", groups);
+        bw.write(J.toString());
+        bw.close();
+        fw.close();
     }
 
     @Override
