@@ -8,6 +8,7 @@ import event.poke.pokeMain;
 import function.auto114514.Auto114514Main;
 import function.autoForwardGenerator.AutoForwardGeneratorMain;
 import function.autoreply.AutoReplyMain;
+import function.cat.catMain;
 import function.compiler.compilerMain;
 import function.deliver.DeliverMain;
 import function.fudu.fuduMain;
@@ -24,6 +25,7 @@ import function.uno.UNOMain;
 import httpconnect.HttpURLConnectionUtil;
 import interfaces.EventProcessable;
 import interfaces.Processable;
+import utils.userNameGetter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,11 +36,11 @@ import java.util.*;
 
 public class Main {
     private static final Set<Long> friendSet = new HashSet<>();
-    private static final Map<Long, String> userName = new HashMap<>();
     private static final ArrayList<interfaces.Processable> features = new ArrayList<>();
     private static final ArrayList<interfaces.EventProcessable> events = new ArrayList<>();
     private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String[] logLevel = {"INFO", "WARNING", "ERROR"};
+    public static userNameGetter userName;
     public static int sendPort;
     public static int receivePort;
     public static long botQQ;
@@ -46,10 +48,6 @@ public class Main {
 
     public static Set<Long> getFriendSet() {
         return friendSet;
-    }
-
-    public static String getName(long ID) {
-        return userName.get(ID);
     }
 
 
@@ -76,15 +74,6 @@ public class Main {
             }
             if (J_input.containsKey("group_id")) {
                 group_id = J_input.getLong("group_id");
-            }
-            if (J_input.containsKey("sender")) {
-                if (J_input.getJSONObject("sender").containsKey("card") &&
-                        !J_input.getJSONObject("sender").getString("card").equals("")) {
-                    uName = J_input.getJSONObject("sender").getString("card");
-                } else if (J_input.getJSONObject("sender").containsKey("nickname")) {
-                    uName = J_input.getJSONObject("sender").getString("nickname");
-                }
-                userName.put(user_id, uName);
             }
 
             if (message.equals("bot.cntest")) {
@@ -162,6 +151,7 @@ public class Main {
         features.add(new HhshMain());
         features.add(new sdMain());
         features.add(new fuduMain());
+        features.add(new catMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
@@ -214,29 +204,26 @@ public class Main {
         for (Object o : JA) {
             friendSet.add(((JSONObject) o).getLong("user_id"));
         }
+        userName = new userNameGetter();
         new Thread(new InputProcess()).start();
     }
 
     public static String getUserName(long group_id, long user_id) {
-        JSONObject J = new JSONObject();
-        J.put("group_id", group_id);
-        J.put("user_id", user_id);
-
-        J = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_group_member_info", J)).toString());
-        if (J.getString("status").equals("failed")) {
-            J = new JSONObject();
+        try {
+            return userName.getName(group_id, user_id);
+        } catch (NoSuchElementException e) {
+            JSONObject J = new JSONObject();
             J.put("user_id", user_id);
             J = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_stranger_info", J)).toString());
+            J = J.getJSONObject("data");
+
+            String uName;
+            if (J.containsKey("card") && !J.getString("card").equals("")) {
+                uName = J.getString("card");
+            } else if (J.containsKey("nickname")) {
+                uName = J.getString("nickname");
+            } else uName = J.getString("user_id");
+            return uName;
         }
-        J = J.getJSONObject("data");
-
-
-        String uName;
-        if (J.containsKey("card") && !J.getString("card").equals("")) {
-            uName = J.getString("card");
-        } else if (J.containsKey("nickname")) {
-            uName = J.getString("nickname");
-        } else uName = J.getString("user_id");
-        return uName;
     }
 }

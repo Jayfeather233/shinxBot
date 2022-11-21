@@ -75,9 +75,9 @@ public class DeliverMain implements Processable {
         StringBuilder output = new StringBuilder("[CQ:at,qq=" + user_id + "] 大嘴鸥回来啦\n");
         for (DeliverItemInfo u : deliverItemArray) {
             switch (u.color) {
-                case 0 -> output.append("绿色 ");
-                case 1 -> output.append("黄色 ");
-                case 2 -> output.append("紫色 ");
+                case 0 : output.append("绿色 ");break;
+                case 1 : output.append("黄色 ");break;
+                case 2 : output.append("紫色 ");break;
             }
             output.append(u.name).append('\n');
         }

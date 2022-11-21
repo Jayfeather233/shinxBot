@@ -16,18 +16,29 @@ public class InputProcess implements Runnable {
             comma = S.next();
             mess = new StringBuilder(S.next());
             switch (comma) {
-                case "image", "img" -> {
+                case "image": {
                     JSONObject J = new JSONObject();
                     J.put("file", mess);
                     System.out.println(setNextSender("get_image", J));
-                }
-                case "forward", "forw" -> {
+                }break;
+                case "img": {
+                    JSONObject J = new JSONObject();
+                    J.put("file", mess);
+                    System.out.println(setNextSender("get_image", J));
+                }break;
+                case "forward": {
                     JSONObject J = new JSONObject();
                     J.put("message_id", mess);
                     System.out.println(J);
                     System.out.println(setNextSender("get_forward_msg", J));
-                }
-                case "f" -> {
+                }break;
+                case "forw": {
+                    JSONObject J = new JSONObject();
+                    J.put("message_id", mess);
+                    System.out.println(J);
+                    System.out.println(setNextSender("get_forward_msg", J));
+                }break;
+                case "f": {
                     String s1, s2;
                     JSONObject J = new JSONObject();
                     do {
@@ -38,8 +49,8 @@ public class InputProcess implements Runnable {
                         J.put(s1, s2);
                     } while (true);
                     System.out.println(Objects.requireNonNull(setNextSender(mess.toString(), J)));
-                }
-                default -> System.out.println("unsupported");
+                }break;
+                default : System.out.println("unsupported");
             }
         }
     }

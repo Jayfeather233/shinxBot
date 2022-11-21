@@ -33,12 +33,11 @@ class Proc extends Thread {
             }
             //System.out.println(socket + ", session closing....");
 
-            out.write("""
-                    HTTP/1.1 200 OK
-                    Content-Length: 0
-                    Content-Type: application/json
-
-                    """);
+            out.write(
+                    "HTTP/1.1 200 OK\n"+
+                    "Content-Length: 0\n"+
+                    "Content-Type: application/json\n"+ "\n"
+                    );
             //默认不进行快速操作，返回空的body
 
             out.flush();

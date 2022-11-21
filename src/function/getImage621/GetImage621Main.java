@@ -126,14 +126,7 @@ public class GetImage621Main implements Processable {
         }
         if (message.equals("621.level")) {
             Main.setNextSender(message_type, user_id, group_id,
-                    """
-                            level:
-                                0: safe feral pokemon
-                                1: safe feral
-                                2: safe
-                                3: question
-                                4: explicit feral or safe/q
-                                5: explicit""");
+                    "level:\n  0: safe feral pokemon\n  1: safe feral\n  2: safe\n  3: question\n  4: explicit feral or safe/q\n  5: explicit");
             return;
         }
         if (message.startsWith("621.autocomplete")) {
@@ -260,7 +253,7 @@ public class GetImage621Main implements Processable {
                 List<Integer> postIDs = J.getJSONArray("post_ids").toJavaList(Integer.class);
                 StringBuilder msg = new StringBuilder("转发\n");
                 msg.append(Main.botQQ).append(" ").append(J.getString("category")).append(": ").append(J.getString("name")).append("\n");
-                msg.append(Main.botQQ).append(" 合并行\n简介：").append(J.getString("description").formatted()).append("\n结束合并\n");
+                msg.append(Main.botQQ).append(" 合并行\n简介：").append(J.getString("description")/*.formatted()*/).append("\n结束合并\n");
                 msg.append(Main.botQQ).append(" 共有 ").append(J.getLong("post_count")).append(" 张\n");
                 //System.out.println(msg);
                 for (int i = 0; i < postIDs.size(); i++) {
@@ -397,7 +390,7 @@ public class GetImage621Main implements Processable {
                 return;
             }
             switch (sp[0]) {
-                case "group" -> {
+                case "group" : {
                     boolean flg = true;
                     for (int i = 0; i < JGroup.size(); i++) {
                         JSONObject J = JGroup.getJSONObject(i);
@@ -416,8 +409,8 @@ public class GetImage621Main implements Processable {
                         JGroup.add(J);
                         Main.setNextSender(message_type, user_id, group_id, "新建成功");
                     }
-                }
-                case "private" -> {
+                }break;
+                case "private" : {
                     boolean flg = true;
                     for (int i = 0; i < JPrivate.size(); i++) {
                         JSONObject J = JPrivate.getJSONObject(i);
@@ -435,8 +428,8 @@ public class GetImage621Main implements Processable {
                         JPrivate.add(J);
                         Main.setNextSender(message_type, user_id, group_id, "新建成功");
                     }
-                }
-                case "admin" -> {
+                }break;
+                case "admin" : {
                     boolean flg = true;
                     for (int i = 0; i < JAdmin.size(); i++) {
                         JSONObject J = JAdmin.getJSONObject(i);
@@ -454,8 +447,8 @@ public class GetImage621Main implements Processable {
                         JAdmin.add(J);
                         Main.setNextSender(message_type, user_id, group_id, "新建成功");
                     }
-                }
-                default -> Main.setNextSender(message_type, user_id, group_id, "type: group/private/admin or this");
+                }break;
+                default : Main.setNextSender(message_type, user_id, group_id, "type: group/private/admin or this");
             }
 
             saveLevel();
@@ -487,7 +480,7 @@ public class GetImage621Main implements Processable {
             }
 
             switch (sp[0]) {
-                case "group" -> {
+                case "group" : {
                     boolean flg = true;
                     for (int i = 0; i < JGroup.size(); i++) {
                         JSONObject J = JGroup.getJSONObject(i);
@@ -505,8 +498,8 @@ public class GetImage621Main implements Processable {
                     if (flg) {
                         Main.setNextSender(message_type, user_id, group_id, "未找到");
                     }
-                }
-                case "private" -> {
+                }break;
+                case "private" : {
                     boolean flg = true;
                     for (int i = 0; i < JPrivate.size(); i++) {
                         JSONObject J = JPrivate.getJSONObject(i);
@@ -524,8 +517,8 @@ public class GetImage621Main implements Processable {
                     if (flg) {
                         Main.setNextSender(message_type, user_id, group_id, "未找到");
                     }
-                }
-                case "admin" -> {
+                }break;
+                case "admin" : {
                     boolean flg = true;
                     for (int i = 0; i < JAdmin.size(); i++) {
                         JSONObject J = JAdmin.getJSONObject(i);
@@ -543,8 +536,8 @@ public class GetImage621Main implements Processable {
                     if (flg) {
                         Main.setNextSender(message_type, user_id, group_id, "未找到");
                     }
-                }
-                default -> Main.setNextSender(message_type, user_id, group_id, "type: group/private/admin or this");
+                }break;
+                default : Main.setNextSender(message_type, user_id, group_id, "type: group/private/admin or this");
             }
 
             saveLevel();

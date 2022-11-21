@@ -65,11 +65,11 @@ public class nonogram implements Processable {
     @Override
     public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         if (message.equals("数织帮助")) {
-            Main.setNextSender(message_type, user_id, group_id, """
-                    游戏棋盘是一张正方形网格. 棋盘每一行左边或每一列上方的数字表示该行或该列上每一组相邻的黑色方格的长度。 游戏目标是要找出所有的黑色方格。在原图上涂黑后发回机器人即可。
-                    开始新游戏：来局数织
-                    数织检测：数织检测 [1,2,3](难度) [图片]
-                    提交答案：@机器人并发送图片""");
+            Main.setNextSender(message_type, user_id, group_id,
+                    "游戏棋盘是一张正方形网格. 棋盘每一行左边或每一列上方的数字表示该行或该列上每一组相邻的黑色方格的长度。 游戏目标是要找出所有的黑色方格。在原图上涂黑后发回机器人即可。\n"+
+                    "开始新游戏：来局数织\n"+
+                    "数织检测：数织检测 [1,2,3](难度) [图片]\n"+
+                    "提交答案：@机器人并发送图片\n");
             return;
         }
         if (message.equals("来局数织")) {

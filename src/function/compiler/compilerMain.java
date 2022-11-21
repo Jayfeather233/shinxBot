@@ -28,11 +28,7 @@ public class compilerMain implements Processable {
                 System.out.println("如果想使用在线编译功能，请在compilerKey.json里填写JDoodle的账户信息");
                 FileWriter fw = new FileWriter("compilerKey.json", false);
                 BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("""
-                        {
-                          "clientId": "",
-                          "clientSecret": ""
-                        }""");
+                bw.write("{\"clientId\": \"\",\"clientSecret\": \"\"}");
                 bw.close();
                 fw.close();
             } catch (IOException ee) {
@@ -62,17 +58,17 @@ public class compilerMain implements Processable {
         String versionIndex;
 
         switch (language) {
-            case "c" -> versionIndex = "5";
-            case "java" -> versionIndex = "4";
-            case "c++" -> {
+            case "c" : versionIndex = "5";break;
+            case "java" : versionIndex = "4";break;
+            case "c++" : {
                 language = "cpp";
                 versionIndex = "5";
-            }
-            case "python" -> {
+            }break;
+            case "python" : {
                 language = "python3";
                 versionIndex = "4";
-            }
-            default -> {
+            }break;
+            default : {
                 Main.setNextSender(message_type, user_id, group_id, "不支持的语言类型");
                 Main.setNextLog("Compiler at group " + group_id + " by "+user_id + " unsupported language " + language,0);
                 return;

@@ -142,7 +142,7 @@ public class UNOGame implements Runnable {
         StringBuilder sb = new StringBuilder("出牌顺序：\n");
         int bf = nowPlayer;
         do {
-            sb.append(Main.getName(playerID.get(bf))).append("有").append(playerCards.get(bf).size()).append("张牌\n");
+            sb.append(Main.getUserName(gameID,playerID.get(bf))).append("有").append(playerCards.get(bf).size()).append("张牌\n");
             bf = (bf + order + playerID.size()) % playerID.size();
         } while (bf != nowPlayer);
         return String.valueOf(sb);
@@ -264,7 +264,7 @@ public class UNOGame implements Runnable {
                 if (lastCard % 14 == 12 && needDraw == 0) {
                     cardName += "(上一名玩家已摸牌)";
                 }
-                sendAllMsg("上一张牌是" + cardName + "\n现在是 " + Main.getName(playerID.get(nowPlayer)) + " 出牌，他还剩" + playerCards.get(nowPlayer).size() + "张牌");
+                sendAllMsg("上一张牌是" + cardName + "\n现在是 " + Main.getUserName(gameID, playerID.get(nowPlayer)) + " 出牌，他还剩" + playerCards.get(nowPlayer).size() + "张牌");
 
                 playerCards.get(nowPlayer).sort(Comparator.comparingInt(o -> o));
 
@@ -371,7 +371,7 @@ public class UNOGame implements Runnable {
                         }
                         draw(playerID.indexOf(bufferID), needDraw);
                         sendPrivateMsg(bufferID, "手牌增加" + needDraw + "张");
-                        sendAllMsg(Main.getName(bufferID) + " 已摸牌" + needDraw + "张");
+                        sendAllMsg(Main.getUserName(gameID, bufferID) + " 已摸牌" + needDraw + "张");
                         if (nextColor >= 0) {
                             lastCard = nextColor * 14 + 13;
                             nextColor = -1;

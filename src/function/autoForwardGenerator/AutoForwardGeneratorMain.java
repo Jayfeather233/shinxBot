@@ -70,20 +70,7 @@ public class AutoForwardGeneratorMain implements Processable {
     public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         message = message.substring(2);
         if (message.equals("帮助")) {
-            Main.setNextSender(message_type, user_id, group_id, """
-                    格式为：
-                    转发
-                    [@某人或qq号] 消息（一整行）
-                    [@某人或qq号] 合并行
-                    （多行消息）
-                    结束合并
-                    ...
-                    [@某人或qq号] 转发
-                    （此处为转发内套转发）
-                    结束转发
-                    ...
-                    结束转发
-                    """);
+            Main.setNextSender(message_type, user_id, group_id, "格式为：\n转发\n[@某人或qq号] 消息（一整行）\n[@某人或qq号] 合并行\n（多行消息）\n结束合并\n...\n[@某人或qq号] 转发\n（此处为转发内套转发）\n结束转发\n...\n结束转发 ");
             return;
         }
         Scanner S = new Scanner(message);

@@ -40,26 +40,31 @@ public class GuessGameMain implements Processable {
             if (type == -1) sendMsg(message_type, user_id, group_id, "数字太大");
             GuessGameInfo u = playerMap.get(user_id);
             switch (u.state) {
-                case 0 -> {
+                case 0 : {
                     switch ((int) type) {
-                        case 1 -> {
+                        case 1 : {
                             u.state = 1;
                             sendMsg(message_type, user_id, group_id, "请设置上限：");
-                        }
-                        case 2 -> {
+                        }break;
+                        case 2 : {
                             u.state = 10;
                             sendMsg(message_type, user_id, group_id, "请设置上限：");
-                        }
-                        case 3 ->
+                        }break;
+                        case 3 :
                                 sendMsg(message_type, user_id, group_id, "猜数游戏：每猜一个数，机器人会告诉你比标准答案大还是小，在与标准答案相差10以内会说接近。\n困难猜数游戏：只会告诉你与标准答案相差的百分比区间。");
                     }
-                }
-                case 1, 10 -> {
+                }break;
+                case 1 : {
                     ++u.state;
                     u.stdAnswer = new Random().nextInt((int) type) + 1;
                     sendMsg(message_type, user_id, group_id, "开始游戏");
-                }
-                case 2 -> {
+                }break;
+                case 10 : {
+                    ++u.state;
+                    u.stdAnswer = new Random().nextInt((int) type) + 1;
+                    sendMsg(message_type, user_id, group_id, "开始游戏");
+                }break;
+                case 2 : {
                     if (type == u.stdAnswer) {
                         sendMsg(message_type, user_id, group_id, "猜对了！");
                         playerMap.remove(user_id);
@@ -68,8 +73,8 @@ public class GuessGameMain implements Processable {
                     } else if (type < u.stdAnswer) {
                         sendMsg(message_type, user_id, group_id, "较小");
                     } else sendMsg(message_type, user_id, group_id, "较大");
-                }
-                case 11 -> {
+                }break;
+                case 11 : {
                     if (type == u.stdAnswer) {
                         sendMsg(message_type, user_id, group_id, "猜对了！");
                         playerMap.remove(user_id);
@@ -82,7 +87,7 @@ public class GuessGameMain implements Processable {
                         else if (percentage >= 0.10) sendMsg(message_type, user_id, group_id, "相对于答案相差大于10%");
                         else sendMsg(message_type, user_id, group_id, "相对于答案相差小于10%");
                     }
-                }
+                }break;
             }
             playerMap.replace(user_id, u);
         }

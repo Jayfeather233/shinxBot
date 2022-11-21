@@ -23,7 +23,7 @@ public class sdMain implements Processable {
 
     private JSONArray groups;
 
-    private final JSONArray pattern = JSONArray.parseArray("""
+    private final JSONArray pattern = JSONArray.parseArray(/*"""
             [
             "",
             50,
@@ -48,7 +48,7 @@ public class sdMain implements Processable {
             "",
             false,false,false,3
             ]
-            """);
+            """*/"");
 
     public sdMain() {
         try {
@@ -82,7 +82,7 @@ public class sdMain implements Processable {
         message = message.replace("\n","");
         if (message.equals("sd.help")) {
             Main.setNextSender(message_type, user_id, group_id,
-                    """
+                    /*"""
                             Stable Diffusion:
                                 sd prompt:xxx H:xxx W:xxx CF:xxx STEP:xxx
                             prompt: 提示词
@@ -90,7 +90,7 @@ public class sdMain implements Processable {
                             W: 图片宽度，默认512 [50,512]
                             CF: 多大依赖提示词，默认7.5 [2,10]
                             STEP: 生成步骤数，默认50 [0,150]
-                            """);
+                            """*/"");
             return;
         }
         if(message.equals("sd.on")){
@@ -192,9 +192,9 @@ public class sdMain implements Processable {
         J.put("fn_index", 12);
         JSONObject mid = JSONObject.parseObject(Objects.requireNonNull(HttpURLConnectionUtil.doPost("http://localhost:7860/api/txt2img/", J)).toString());
         try{
-            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)+"%").formatted());
+            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)+"%")/*.formatted()*/);
         } catch (UnknownFormatConversionException e){
-            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2)).formatted());
+            Main.setNextSender(message_type,user_id,group_id,(mid.getJSONArray("data").getString(2))/*.formatted()*/);
         }
         hashCodex = null;
         J.put("fn_index", 11);
