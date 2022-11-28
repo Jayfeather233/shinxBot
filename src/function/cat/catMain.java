@@ -1,21 +1,75 @@
 package function.cat;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import interfaces.Processable;
 import main.Main;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class catMain implements Processable {
 
     public catMain(){
         catColor.initColor();
+        positionText.initText();
+
+        try {
+            File ff = new File("catData.json");
+            if (!ff.exists()) {
+                if (!ff.createNewFile()) System.out.println("catData创建失败");
+                else {
+                    FileWriter fw = new FileWriter(ff);
+                    fw.write("{\"data\":[]}");
+                    fw.close();
+                }
+            }
+            FileReader f = new FileReader("catData.json");
+            Scanner S = new Scanner(f);
+            StringBuilder sb = new StringBuilder();
+            while (S.hasNext()) {
+                sb.append(S.nextLine()).append(' ');
+            }
+
+            JSONArray ja = JSONObject.parseObject(sb.toString()).getJSONArray("data");
+            for(JSONObject u : ja.toJavaList(JSONObject.class)){
+                userCat.put(u.getLong("user"),new singleCat(u.getJSONObject("data")));
+            }
+
+            S.close();
+            f.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     Map<Long,singleCat> userCat = new HashMap<>();
     Set<Long> naming = new HashSet<>();
+
+    public void catSave(){
+        JSONArray ja = new JSONArray();
+        for(long u : userCat.keySet()){
+            JSONObject Jt = new JSONObject();
+            Jt.put("data", userCat.get(u).toJSONObject());
+            Jt.put("user",u);
+            ja.add(Jt);
+        }
+        JSONObject J = new JSONObject();
+        J.put("data",ja);
+
+        try{
+            FileWriter fw = new FileWriter("catData.json", false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(J.toString());
+            bw.close();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Cannot save cat data.");
+        }
+    }
+
     @Override
     public void process(String message_type, String message, long group_id, long user_id, int message_id) {
         if(message.equals("get")){
@@ -25,14 +79,21 @@ public class catMain implements Processable {
                 Main.setNextSender(message_type,user_id,group_id,"name?");
                 naming.add(user_id);
             }
-        }else if(message.equals("look")){
+        }else if(message.startsWith("look")){
             if(!userCat.containsKey(user_id)){
                 Main.setNextSender(message_type,user_id,group_id,"No cat.");
             }else{
-                Main.setNextSender(message_type,user_id,group_id,userCat.get(user_id).toString());
+                positionName u;
+                try {
+                    u = positionName.valueOf(message.substring(4).trim());
+                } catch(IllegalArgumentException e){
+                    u =positionName.values()[singleCat.R.nextInt(positionName.values().length)];
+                }
+                Main.setNextSender(message_type, user_id, group_id, userCat.get(user_id).visit(u));
             }
         }else{
             userCat.put(user_id,new singleCat(message));
+            Main.setNextSender(message_type,user_id,group_id,"OK.");
         }
     }
 

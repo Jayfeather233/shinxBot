@@ -22,6 +22,9 @@ public class catColor {
     public catColor() {
         col = singleCat.R.nextInt(bodyColor.size());
     }
+    public catColor(int col){
+        this.col=col;
+    }
 
     public catColor(int type, catColor co) {
         if (type == 0) {
@@ -73,5 +76,9 @@ public class catColor {
     @Override
     public String toString() {
         return colorName.get(col);
+    }
+
+    public int toInteger(){
+        return col;
     }
 }

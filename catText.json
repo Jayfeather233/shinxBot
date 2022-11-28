@@ -1,0 +1,94 @@
+{
+  "toilet": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "livingRoom": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "garden": {
+    "hungry": [
+      "%name% sniff the grass. Is %gender% want to eat it?"
+    ],
+    "thirsty": [
+      "%name% looks to the pool time to time."
+    ],
+    "others": [
+      "walking in the garden, %name% rubs your leg."
+    ]
+  },
+  "diningRoom": {
+    "hungry": [
+      "%name% jumps up to table, walking around."
+    ],
+    "thirsty": [
+      "%name% "
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "kitchen": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "balcony": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "bedroom": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "bathroom": {
+    "hungry": [
+      "%name%"
+    ],
+    "thirsty": [
+      "%name%"
+    ],
+    "others": [
+      "%name% "
+    ]
+  },
+  "others": [
+    "Where is %name%?",
+    "You can hear %name%, but no where in sight."
+  ]
+}
