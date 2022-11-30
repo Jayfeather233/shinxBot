@@ -47,7 +47,7 @@ public class catMain implements Processable {
     Map<Long,singleCat> userCat = new HashMap<>();
     Set<Long> naming = new HashSet<>();
 
-    public void catSave(){
+    public synchronized void catSave(){
         JSONArray ja = new JSONArray();
         for(long u : userCat.keySet()){
             JSONObject Jt = new JSONObject();
@@ -91,15 +91,18 @@ public class catMain implements Processable {
                 }
                 Main.setNextSender(message_type, user_id, group_id, userCat.get(user_id).visit(u));
             }
-        }else{
+            catSave();
+        }else if(naming.contains(user_id)){
             userCat.put(user_id,new singleCat(message));
+            naming.remove(user_id);
             Main.setNextSender(message_type,user_id,group_id,"OK.");
+            catSave();
         }
     }
 
     @Override
     public boolean check(String message_type, String message, long group_id, long user_id) {
-        return user_id==1826559889 && ( message.equals("get") || message.equals("look") || naming.contains(user_id));
+        return user_id==1826559889 && ( message.equals("get") || message.startsWith("look") || naming.contains(user_id));
     }
 
     @Override

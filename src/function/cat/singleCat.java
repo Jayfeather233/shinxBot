@@ -2,6 +2,7 @@ package function.cat;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -19,9 +20,17 @@ class position {
     public position() {
         nextPosition();
     }
+    public position(String s){
+        name = positionName.valueOf(s);
+    }
 
     public void nextPosition() {
         name = positionName.values()[R.nextInt(positionName.values().length)];
+    }
+
+    @Override
+    public String toString() {
+        return name.toString();
     }
 }
 
@@ -36,6 +45,15 @@ class catAppearance {
         this.tailTipCol = new catColor(1, this.furCol);
         this.eyeCol = new catColor(2, this.furCol);
         this.pa = pattern.values()[R.nextInt(pattern.values().length)];
+    }
+
+    public catAppearance(JSONObject J){
+        this.eyeCol = new catColor(J.getInteger("eyeCol"));
+        this.furCol = new catColor(J.getInteger("furCol"));
+        this.patternCol = new catColor(J.getInteger("patternCol"));
+        this.footCol = new catColor(J.getInteger("footCol"));
+        this.tailTipCol = new catColor(J.getInteger("tailTipCol"));
+        this.pa = pattern.valueOf(J.getString("pa"));
     }
 
     @Override
@@ -70,6 +88,19 @@ class state {
         thirsty = 100;
         pos = new position();
     }
+    public state(JSONObject J){
+        this.hungry = J.getLong("hungry");
+        this.thirsty = J.getLong("thirsty");
+        this.pos = new position(J.getString("pos"));
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject J = new JSONObject();
+        J.put("hungry",this.hungry);
+        J.put("thirsty",this.thirsty);
+        J.put("pos",this.pos.name);
+        return J;
+    }
 }
 
 class feeding {
@@ -81,7 +112,13 @@ class feeding {
 
     public feeding() {
         foodAmount = waterAmount = 0;
-        foodPos = waterPos = null;
+        foodPos = waterPos = positionName.livingRoom;
+    }
+    public feeding(JSONObject J){
+        this.foodAmount = J.getLong("foodAmount");
+        this.waterAmount = J.getLong("waterAmount");
+        this.foodPos = positionName.valueOf(J.getString("foodPos"));
+        this.waterPos = positionName.valueOf(J.getString("waterPos"));
     }
 
     public void refill() {
@@ -121,6 +158,19 @@ public class singleCat {
         affection = 50;
     }
     public singleCat(JSONObject J){
+        try {
+            this.birthday = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(J.getString("birthday"));
+            this.stat = new state(J.getJSONObject("stat"));
+            this.ap = new catAppearance(J.getJSONObject("ap"));
+            this.name = J.getString("name");
+            this.feed = new feeding(J.getJSONObject("feed"));
+            this.lastVisitTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(J.getString("lastVisitTime"));
+            this.gender = J.getBoolean("gender");
+            this.affection = J.getInteger("affection");
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -188,15 +238,12 @@ public class singleCat {
 
     public JSONObject toJSONObject() {
         JSONObject J = new JSONObject();
-        JSONObject st = new JSONObject();
-        J.put("name", this.name);
-        J.put("birthday", (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(birthday)));
-        st.put("hungry", this.stat.hungry);
-        st.put("thirsty", this.stat.thirsty);
-        J.put("stat", st);
+        J.put("birthday", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(birthday)));
+        J.put("stat", this.stat.toJSONObject());
         J.put("ap", this.ap.toJSONObject());
+        J.put("name", this.name);
         J.put("feed", this.feed.toJSONObject());
-        J.put("birthday", (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(lastVisitTime)));
+        J.put("lastVisitTime", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(lastVisitTime)));
         J.put("gender", gender);
         J.put("affection", affection);
         return J;
