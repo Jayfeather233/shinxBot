@@ -2,6 +2,7 @@ package main;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import event.dragonKing.dragonMain;
 import event.friendadd.friendAddMain;
 import event.groupmemberchange.MemberChangeMain;
 import event.poke.pokeMain;
@@ -54,7 +55,6 @@ public class Main {
     public static void setNextOutput(String input) {//收到传来的EVENT的JSON数据处理
         JSONObject J_input = JSONObject.parseObject(input);
         String post_type = J_input.getString("post_type");
-        String uName = null;
 
         if (post_type.equals("request") || post_type.equals("notice")) {
             for (EventProcessable eve : events) {
@@ -156,6 +156,7 @@ public class Main {
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
         events.add(new pokeMain());
+        events.add(new dragonMain());
 
         File f = new File("./port.txt");
         if (!f.exists()) {
@@ -186,15 +187,13 @@ public class Main {
         R1.start();
         JSONObject J_input;
 
-        boolean flg = true;
-        while (flg) {
-            flg = false;
+        while (true) {
             try {
                 J_input = JSONObject.parseObject(Objects.requireNonNull(setNextSender("get_login_info", null)).toString());
                 botQQ = J_input.getJSONObject("data").getLong("user_id");
                 break;
-            } catch (NullPointerException e) {
-                flg = true;
+            } catch (NullPointerException ignored) {
+
             }
             Thread.sleep(10000);
         }
