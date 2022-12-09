@@ -182,8 +182,9 @@ public class singleCat {
         this.feed.waterPos = positionName.values()[waterPos];
     }
 
-    public void refill() {
+    public String refill() {
         this.feed.refill();
+        return "Food and water refilled.";
     }
 
     public String visit() {

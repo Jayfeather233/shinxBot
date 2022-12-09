@@ -10,7 +10,10 @@ import java.util.*;
 
 public class catMain implements Processable {
 
-    public catMain(){
+    Map<Long, singleCat> userCat = new HashMap<>();
+    Set<Long> naming = new HashSet<>();
+
+    public catMain() {
         catColor.initColor();
         positionText.initText();
 
@@ -32,8 +35,8 @@ public class catMain implements Processable {
             }
 
             JSONArray ja = JSONObject.parseObject(sb.toString()).getJSONArray("data");
-            for(JSONObject u : ja.toJavaList(JSONObject.class)){
-                userCat.put(u.getLong("user"),new singleCat(u.getJSONObject("data")));
+            for (JSONObject u : ja.toJavaList(JSONObject.class)) {
+                userCat.put(u.getLong("user"), new singleCat(u.getJSONObject("data")));
             }
 
             S.close();
@@ -44,21 +47,18 @@ public class catMain implements Processable {
         }
     }
 
-    Map<Long,singleCat> userCat = new HashMap<>();
-    Set<Long> naming = new HashSet<>();
-
-    public synchronized void catSave(){
+    public synchronized void catSave() {
         JSONArray ja = new JSONArray();
-        for(long u : userCat.keySet()){
+        for (long u : userCat.keySet()) {
             JSONObject Jt = new JSONObject();
             Jt.put("data", userCat.get(u).toJSONObject());
-            Jt.put("user",u);
+            Jt.put("user", u);
             ja.add(Jt);
         }
         JSONObject J = new JSONObject();
-        J.put("data",ja);
+        J.put("data", ja);
 
-        try{
+        try {
             FileWriter fw = new FileWriter("catData.json", false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(J.toString());
@@ -72,37 +72,46 @@ public class catMain implements Processable {
 
     @Override
     public void process(String message_type, String message, long group_id, long user_id, int message_id) {
-        if(message.equals("get")){
-            if(userCat.containsKey(user_id)){
-                Main.setNextSender(message_type,user_id,group_id,"Already has one.");
-            }else{
-                Main.setNextSender(message_type,user_id,group_id,"name?");
-                naming.add(user_id);
-            }
-        }else if(message.startsWith("look")){
-            if(!userCat.containsKey(user_id)){
-                Main.setNextSender(message_type,user_id,group_id,"No cat.");
-            }else{
-                positionName u;
-                try {
-                    u = positionName.valueOf(message.substring(4).trim());
-                } catch(IllegalArgumentException e){
-                    u =positionName.values()[singleCat.R.nextInt(positionName.values().length)];
-                }
-                Main.setNextSender(message_type, user_id, group_id, userCat.get(user_id).visit(u));
-            }
-            catSave();
-        }else if(naming.contains(user_id)){
-            userCat.put(user_id,new singleCat(message));
+        if (naming.contains(user_id)) {
+            userCat.put(user_id, new singleCat(message));
             naming.remove(user_id);
-            Main.setNextSender(message_type,user_id,group_id,"OK.");
+            Main.setNextSender(message_type, user_id, group_id, "OK.");
             catSave();
+        } else {
+            message = message.substring(4).trim();
+            if (message.equals("get")) { // get one
+                if (userCat.containsKey(user_id)) {
+                    Main.setNextSender(message_type, user_id, group_id, "Already has one.");
+                } else {
+                    Main.setNextSender(message_type, user_id, group_id, "name?");
+                    naming.add(user_id);
+                }
+            } else if (!userCat.containsKey(user_id)) {
+                Main.setNextSender(message_type, user_id, group_id, "No cat.");
+            } else { // everything here
+                if(message.startsWith("look") || message.startsWith("visit")) {
+                    if(message.startsWith("look")) message = message.substring(4).trim();
+                    else if(message.startsWith("visit")) message = message.substring(5).trim();
+                    positionName u;
+                    try {
+                        u = positionName.valueOf(message);
+                    } catch (IllegalArgumentException e) {
+                        u = positionName.values()[singleCat.R.nextInt(positionName.values().length)];
+                    }
+                    Main.setNextSender(message_type, user_id, group_id, userCat.get(user_id).visit(u));
+                    catSave();
+                } else if(message.equals("refill")){
+                    Main.setNextSender(message_type, user_id, group_id, userCat.get(user_id).refill());
+                    catSave();
+                }
+            }
         }
     }
 
     @Override
     public boolean check(String message_type, String message, long group_id, long user_id) {
-        return user_id==1826559889 && ( message.equals("get") || message.startsWith("look") || naming.contains(user_id));
+        message = message.toLowerCase();
+        return message.startsWith(".cat") || naming.contains(user_id);
     }
 
     @Override

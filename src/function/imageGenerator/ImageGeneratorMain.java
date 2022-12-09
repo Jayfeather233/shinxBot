@@ -50,7 +50,11 @@ public class ImageGeneratorMain implements Processable {
                 }
             }
         } else {
-            uin = Long.parseLong(message);
+            try {
+                uin = Long.parseLong(message);
+            }catch (NumberFormatException e){
+                return;
+            }
         }
 
         if (uin != 0) {
@@ -146,11 +150,12 @@ public class ImageGeneratorMain implements Processable {
 
     @Override
     public boolean check(String message_type, String message, long group_id, long user_id) {
-        return message.startsWith("想要");
+        return message.startsWith("水布想要");
     }
 
     @Override
     public String help() {
-        return "生成水布想要的图片： 想要+[图片]";
+        return "生成水布想要的图片： 水布想要+[图片]";
+        //当然如果没有图片，程序抛个Exception，防止无意触发
     }
 }
