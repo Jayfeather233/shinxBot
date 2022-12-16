@@ -127,7 +127,8 @@ public class Main {
         2-error
      */
     public synchronized static void setNextLog(String log, int level) {
-        System.out.println("[" + logFormatter.format(new Date()) + "] [" + logLevel[level] + "]: " + log);
+        if(level == 2) System.err.println("[" + logFormatter.format(new Date()) + "] [" + logLevel[level] + "]: " + log);
+        else System.out.println("[" + logFormatter.format(new Date()) + "] [" + logLevel[level] + "]: " + log);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {

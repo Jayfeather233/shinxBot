@@ -1,6 +1,7 @@
 package httpconnect;
 
 import com.alibaba.fastjson.JSONObject;
+import main.Main;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.io.*;
@@ -45,8 +46,10 @@ public class HttpURLConnectionUtil {
             connection.setReadTimeout(15000);
             //开始连接
             connection.connect();
+
+            int rc = connection.getResponseCode();
             //获取响应数据
-            if (connection.getResponseCode() == 200) {
+            if (rc == 200) {
                 //获取返回的数据
                 is = connection.getInputStream();
                 if (null != is) {
@@ -56,12 +59,12 @@ public class HttpURLConnectionUtil {
                         result.append(temp);
                     }
                 }
+            } else {
+                Main.setNextLog(httpUrl + " ResponseCode: " + rc, 2);
             }
-        } catch (SSLHandshakeException e) {
-            System.out.println(e.getMessage());
-            return do621Get(httpUrl, userName, isAuthor, authorKey);
         } catch (IOException e) {
             e.printStackTrace();
+            return do621Get(httpUrl, userName, isAuthor, authorKey);
         } finally {
             if (br != null) {
                 try {
@@ -106,8 +109,10 @@ public class HttpURLConnectionUtil {
             connection.setReadTimeout(15000);
             //开始连接
             connection.connect();
+
+            int rc = connection.getResponseCode();
             //获取响应数据
-            if (connection.getResponseCode() == 200) {
+            if (rc == 200) {
                 //获取返回的数据
                 is = connection.getInputStream();
                 if (null != is) {
@@ -117,6 +122,8 @@ public class HttpURLConnectionUtil {
                         result.append(temp);
                     }
                 }
+            } else {
+                Main.setNextLog(httpUrl + " ResponseCode: " + rc, 2);
             }
         } catch (SSLHandshakeException e) {
             System.out.println(e.getMessage());

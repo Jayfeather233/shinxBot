@@ -9,6 +9,8 @@ import utils.ImageDownloader;
 
 import java.io.*;
 import java.net.SocketTimeoutException;
+import java.net.URLEncoder;
+import java.rmi.ConnectException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -96,8 +98,9 @@ public class GetImage621Main implements Processable {
             else if (!input.contains("favcount") && !input.contains("score") && !poolFlag)
                 quest.append("+favcount:>400").append("+score:>200");
             if (!input.contains("order") && !poolFlag) quest.append("+order:random");
-            if (!input.contains("gore") && level <= 4) quest.append("+-gore");
-            if (!input.contains("human") && level <= 2) quest.append("+-human");
+            if (!input.contains("gore") || level <= 4) quest.append("+-gore");
+            if (!input.contains("anthro") || level <= 2) quest.append("+-anthro");
+            if (!input.contains("human") || level <= 2) quest.append("+-human");
         }
         return quest;
     }
@@ -186,7 +189,7 @@ public class GetImage621Main implements Processable {
         JSONObject J, J2;
         try {
             J = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest.toString(), userName, true, authorKey));
-            //System.out.println(HttpURLConnectionUtil.doGet(quest2.toString()));
+            //System.out.println(J);
             J2 = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest2.toString(), userName, true, authorKey));
             //System.out.println(J2);
         } catch (SocketTimeoutException e) {
@@ -213,6 +216,8 @@ public class GetImage621Main implements Processable {
             }
             return;
         }
+
+        retry = 0;
         int count = J2.getJSONArray("posts").size();
         if (J.getJSONArray("posts").size() == 0) {
             Main.setNextSender(message_type, user_id, group_id, "不存在图片");
