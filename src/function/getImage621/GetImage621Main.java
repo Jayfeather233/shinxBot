@@ -181,8 +181,7 @@ public class GetImage621Main implements Processable {
         StringBuilder quest = dealInput(message, level, poolFlag);
         StringBuilder quest2 = new StringBuilder(quest);
 
-        quest.insert(0, "https://e621.net/posts.json?limit=1&tags=");
-        quest2.insert(0, "https://e621.net/posts.json?limit=50&tags=");
+        quest.insert(0, "https://e621.net/posts.json?limit=50&tags=");
 
         //System.out.println(quest2);
 
@@ -190,8 +189,6 @@ public class GetImage621Main implements Processable {
         try {
             J = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest.toString(), userName, true, authorKey));
             //System.out.println(J);
-            J2 = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest2.toString(), userName, true, authorKey));
-            //System.out.println(J2);
         } catch (SocketTimeoutException e) {
             retry++;
             //System.out.println("621 network failed");
@@ -204,7 +201,7 @@ public class GetImage621Main implements Processable {
             }
             return;
         }
-        if (J == null || J2 == null) {
+        if (J == null) {
             retry++;
             //System.out.println("621 unknown reason");
             if (retry >= 3) {
@@ -218,8 +215,8 @@ public class GetImage621Main implements Processable {
         }
 
         retry = 0;
-        int count = J2.getJSONArray("posts").size();
-        if (J.getJSONArray("posts").size() == 0) {
+        int count = J.getJSONArray("posts").size();
+        if (count == 0) {
             Main.setNextSender(message_type, user_id, group_id, "不存在图片");
             Main.setNextLog("621 at group " + group_id + " by " + user_id + " but no img and retry = " + retry, 0);
             return;
@@ -251,21 +248,21 @@ public class GetImage621Main implements Processable {
             }
         } else {
             try {
-                long poolID = getPoolID(J2.getJSONArray("posts").getJSONObject(0));
+                long poolID = getPoolID(J.getJSONArray("posts").getJSONObject(0));
                 String quest3 = "https://e621.net/pools.json?search[id]=" + poolID;
-                JSONArray JA = JSONArray.parseArray(HttpURLConnectionUtil.do621Get(quest3, userName, true, authorKey));
-                J = JA.getJSONObject(0);
-                List<Integer> postIDs = J.getJSONArray("post_ids").toJavaList(Integer.class);
+                JSONObject J3 = JSONArray.parseArray(HttpURLConnectionUtil.do621Get(quest3, userName, true, authorKey)).getJSONObject(0);
+
+                List<Integer> postIDs = J3.getJSONArray("post_ids").toJavaList(Integer.class);
                 StringBuilder msg = new StringBuilder("转发\n");
-                msg.append(Main.botQQ).append(" ").append(J.getString("category")).append(": ").append(J.getString("name")).append("\n");
-                msg.append(Main.botQQ).append(" 合并行\n简介：").append(J.getString("description")/*.formatted()*/).append("\n结束合并\n");
-                msg.append(Main.botQQ).append(" 共有 ").append(J.getLong("post_count")).append(" 张\n");
+                msg.append(Main.botQQ).append(" ").append(J3.getString("category")).append(": ").append(J3.getString("name")).append("\n");
+                msg.append(Main.botQQ).append(" 合并行\n简介：").append(J3.getString("description")/*.formatted()*/).append("\n结束合并\n");
+                msg.append(Main.botQQ).append(" 共有 ").append(J3.getLong("post_count")).append(" 张\n");
                 //System.out.println(msg);
                 for (int i = 0; i < postIDs.size(); i++) {
-                    for (int j = 0; j < J2.getJSONArray("posts").size(); j++) {
-                        if (Objects.equals(postIDs.get(i), J2.getJSONArray("posts").getJSONObject(j).getInteger("id"))) {
+                    for (int j = 0; j < J.getJSONArray("posts").size(); j++) {
+                        if (Objects.equals(postIDs.get(i), J.getJSONArray("posts").getJSONObject(j).getInteger("id"))) {
                             msg.append(Main.botQQ).append(" 合并行\n");
-                            msg.append(getImageInfo(J2.getJSONArray("posts").getJSONObject(j), count, poolFlag));
+                            msg.append(getImageInfo(J.getJSONArray("posts").getJSONObject(j), count, poolFlag));
                             msg.append("\n结束合并\n");
                         }
                     }
