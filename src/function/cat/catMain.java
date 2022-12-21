@@ -18,7 +18,7 @@ public class catMain implements Processable {
         positionText.initText();
 
         try {
-            File ff = new File("catData.json");
+            File ff = new File("./config/catData.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("catData创建失败");
                 else {
@@ -27,7 +27,7 @@ public class catMain implements Processable {
                     fw.close();
                 }
             }
-            FileReader f = new FileReader("catData.json");
+            FileReader f = new FileReader("./config/catData.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {
@@ -59,7 +59,7 @@ public class catMain implements Processable {
         J.put("data", ja);
 
         try {
-            FileWriter fw = new FileWriter("catData.json", false);
+            FileWriter fw = new FileWriter("./config/catData.json", false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(J.toString());
             bw.close();

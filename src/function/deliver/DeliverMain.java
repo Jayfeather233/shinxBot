@@ -24,7 +24,7 @@ public class DeliverMain implements Processable {
 
     public DeliverMain() {
         try {
-            FileReader f = new FileReader("DeliverPossibility.txt");
+            FileReader f = new FileReader("./config/DeliverPossibility.txt");
             Scanner S = new Scanner(f);
             int n = S.nextInt();
             for (int i = 0; i < n; i++) {

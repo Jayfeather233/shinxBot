@@ -36,13 +36,13 @@ public class nonogram implements Processable {
 
     public nonogram() {
         try {
-            File ff = new File("nonogramData.json");
+            File ff = new File("./config/nonogramData.json");
             if (!ff.exists()) {
                 FileWriter fw = new FileWriter(ff);
                 fw.write("{}");
                 fw.close();
             }
-            FileReader f = new FileReader("nonogramData.json");
+            FileReader f = new FileReader("./config/nonogramData.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {

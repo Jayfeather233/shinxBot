@@ -9,8 +9,6 @@ import utils.ImageDownloader;
 
 import java.io.*;
 import java.net.SocketTimeoutException;
-import java.net.URLEncoder;
-import java.rmi.ConnectException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -27,7 +25,7 @@ public class GetImage621Main implements Processable {
 
     public GetImage621Main() {
         try {
-            File ff = new File("621Level.json");
+            File ff = new File("./config/621Level.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("621权限管理文件创建失败");
                 else {
@@ -36,7 +34,7 @@ public class GetImage621Main implements Processable {
                     fw.close();
                 }
             }
-            FileReader f = new FileReader("621Level.json");
+            FileReader f = new FileReader("./config/621Level.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {
@@ -179,13 +177,12 @@ public class GetImage621Main implements Processable {
             getTag = true;
         }
         StringBuilder quest = dealInput(message, level, poolFlag);
-        StringBuilder quest2 = new StringBuilder(quest);
 
         quest.insert(0, "https://e621.net/posts.json?limit=50&tags=");
 
         //System.out.println(quest2);
 
-        JSONObject J, J2;
+        JSONObject J;
         try {
             J = JSONObject.parseObject(HttpURLConnectionUtil.do621Get(quest.toString(), userName, true, authorKey));
             //System.out.println(J);
@@ -558,7 +555,7 @@ public class GetImage621Main implements Processable {
     }
 
     private void saveLevel() throws IOException {
-        FileWriter fw = new FileWriter("621Level.json", false);
+        FileWriter fw = new FileWriter("./config/621Level.json", false);
         BufferedWriter bw = new BufferedWriter(fw);
         JSONObject J = new JSONObject();
         J.put("group", JGroup);

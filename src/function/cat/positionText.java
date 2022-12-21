@@ -18,7 +18,7 @@ public class positionText {
 
     static void initText() {
         try {
-            File ff = new File("catText.json");
+            File ff = new File("./config/catText.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("catText创建失败");
                 else {
@@ -37,7 +37,7 @@ public class positionText {
                     fw.close();
                 }
             }
-            FileReader f = new FileReader("catText.json");
+            FileReader f = new FileReader("./config/catText.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {

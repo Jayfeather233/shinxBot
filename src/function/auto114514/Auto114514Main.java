@@ -24,7 +24,7 @@ public class Auto114514Main implements Processable {
 
     public Auto114514Main() {
         try {
-            FileReader f = new FileReader("homodata.txt");
+            FileReader f = new FileReader("./config/homodata.txt");
             Scanner S = new Scanner(f);
             while (S.hasNext()) {
                 ai.add(new info(S.nextInt(), S.next()));

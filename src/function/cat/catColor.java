@@ -43,12 +43,12 @@ public class catColor {
 
     static void initColor() {
         try {
-            File ff = new File("catColor.json");
+            File ff = new File("./config/catColor.json");
             if (!ff.exists()) {
                 System.out.println("颜色文件不存在");
                 return;
             }
-            FileReader f = new FileReader("catColor.json");
+            FileReader f = new FileReader("./config/catColor.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {

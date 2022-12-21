@@ -14,7 +14,7 @@ public class AutoReplyMain implements Processable {
 
     public AutoReplyMain() {
         try {
-            File ff = new File("replydata.json");
+            File ff = new File("./config/replydata.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("自动回复文件创建失败");
                 else {
@@ -23,7 +23,7 @@ public class AutoReplyMain implements Processable {
                     fw.close();
                 }
             }
-            FileReader f = new FileReader("replydata.json");
+            FileReader f = new FileReader("./config/replydata.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {
@@ -40,7 +40,7 @@ public class AutoReplyMain implements Processable {
 
     private void save() {
         try {
-            FileWriter fw = new FileWriter("replydata.json", false);
+            FileWriter fw = new FileWriter("./config/replydata.json", false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(replyData.toString());
             bw.close();

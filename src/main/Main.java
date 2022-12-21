@@ -159,7 +159,7 @@ public class Main {
         events.add(new pokeMain());
         events.add(new dragonMain());
 
-        File f = new File("./port.txt");
+        File f = new File("./config/port.txt");
         if (!f.exists()) {
             Scanner S = new Scanner(System.in);
             System.out.println("Please input the send_port: ");

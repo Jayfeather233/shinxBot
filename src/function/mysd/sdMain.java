@@ -52,7 +52,7 @@ public class sdMain implements Processable {
 
     public sdMain() {
         try {
-            File ff = new File("sdLevel.json");
+            File ff = new File("./config/sdLevel.json");
             if (!ff.exists()) {
                 if (!ff.createNewFile()) System.out.println("sdLevel创建失败");
                 else {
@@ -61,7 +61,7 @@ public class sdMain implements Processable {
                     fw.close();
                 }
             }
-            FileReader f = new FileReader("sdLevel.json");
+            FileReader f = new FileReader("./config/sdLevel.json");
             Scanner S = new Scanner(f);
             StringBuilder sb = new StringBuilder();
             while (S.hasNext()) {
@@ -218,7 +218,7 @@ public class sdMain implements Processable {
     }
 
     private void save() throws IOException {
-        FileWriter fw = new FileWriter("sdLevel.json", false);
+        FileWriter fw = new FileWriter("./config/sdLevel.json", false);
         BufferedWriter bw = new BufferedWriter(fw);
         JSONObject J = new JSONObject();
         J.put("data", groups);
