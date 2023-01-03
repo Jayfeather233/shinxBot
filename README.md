@@ -13,7 +13,7 @@
 - 来点二次元。来源：[dmoe](https://www.dmoe.cc)
 - 关键词回复
 - 群成员变动提醒
-- 在线编译代码
+- 在线编译代码。来源：[JDoodle](https://www.jdoodle.com/)
 - 数织游戏：手写识别
 - 来点色图：随机色卡
 - 首字母缩写识别，来源：[itorr](https://github.com/itorr/nbnhhsh)
@@ -33,7 +33,7 @@ main/Main.java 为入口。
 ### 如何运行这个机器人
 
 1. 配置并启动go-cqhttp。打开 "反向HTTP POST地址"，并设置你自己的接收端口。
-2. 下载所有文件并运行main.Main（推荐），或者进入发布页面，下载并运行 bot_cqhttp.jar（未更新）。第一次启动需要send_port和receive_port来连接到go-cqhttp。
+2. 下载所有文件并运行main.Main。第一次启动需要send_port和receive_port来连接到go-cqhttp。
 3. 在这之后，希望它能跑起来。
 
 ### 如何添加新功能
