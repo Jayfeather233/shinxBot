@@ -6,6 +6,8 @@ import event.dragonKing.dragonMain;
 import event.friendadd.friendAddMain;
 import event.groupmemberchange.MemberChangeMain;
 import event.poke.pokeMain;
+import function.OCR.OCRMain;
+import function.OPFunction.opMain;
 import function.auto114514.Auto114514Main;
 import function.autoForwardGenerator.AutoForwardGeneratorMain;
 import function.autoreply.AutoReplyMain;
@@ -155,6 +157,8 @@ public class Main {
         features.add(new fuduMain());
         features.add(new catMain());
         features.add(new MineMain());
+        features.add(new opMain());
+        features.add(new OCRMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());
