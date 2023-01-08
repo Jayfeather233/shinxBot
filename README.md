@@ -18,6 +18,9 @@
 - 来点色图：随机色卡
 - 首字母缩写识别，来源：[itorr](https://github.com/itorr/nbnhhsh)
 - 与[Stable Diffusion WebUI](https://github.com/sd-webui/stable-diffusion-webui)对接，在群内生成图片
+- 图片OCR
+- 在线扫雷
+- 群op管理
 
 ### 关于源文件
 
@@ -65,6 +68,9 @@ A bot based on [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 - Random color picture.
 - Acronym identification. From [itorr](https://github.com/itorr/nbnhhsh).
 - Work with [Stable Diffusion WebUI](https://github.com/sd-webui/stable-diffusion-webui) to generate picture and send via QQ.
+- OCR
+- QQ group OP.
+- Online winmine
 
 ### About the source files
 
