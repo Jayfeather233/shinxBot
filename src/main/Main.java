@@ -23,6 +23,7 @@ import function.nonogram.generateNonogram;
 import function.nonogram.nonogram;
 import function.randomColor.randomColorMain;
 import function.uno.UNOMain;
+import function.winmine.MineMain;
 import httpconnect.HttpURLConnectionUtil;
 import interfaces.EventProcessable;
 import interfaces.Processable;
@@ -153,6 +154,7 @@ public class Main {
         features.add(new sdMain());
         features.add(new fuduMain());
         features.add(new catMain());
+        features.add(new MineMain());
 
         events.add(new friendAddMain());
         events.add(new MemberChangeMain());

@@ -99,6 +99,9 @@ public class GetImage621Main implements Processable {
             if (!input.contains("gore") || level <= 4) quest.append("+-gore");
             if (!input.contains("anthro") || level <= 2) quest.append("+-anthro");
             if (!input.contains("human") || level <= 2) quest.append("+-human");
+            if (!input.contains("vore") || level <= 4) quest.append("+-vore");
+            if (!input.contains("huge_breasts") || level <= 4) quest.append("+-huge_breasts");
+            if (!input.contains("unbirthing") || level <= 4) quest.append("+-unbirthing");
         }
         return quest;
     }
@@ -122,7 +125,7 @@ public class GetImage621Main implements Processable {
             return;
         }
         if (message.equals("621.default")) {
-            Main.setNextSender(message_type, user_id, group_id, "如未指定tag，默认加上eeveelution\n如未指定favcount或score，默认加上favcount:>400 score:>200\n如未指定以下tags，默认不搜索gore,anthro,human");
+            Main.setNextSender(message_type, user_id, group_id, "如未指定tag，默认加上eeveelution\n如未指定favcount或score，默认加上favcount:>400 score:>200\n如未指定以下tags，默认不搜索gore,anthro,human,vore,huge breasts,unbirthing");
             return;
         }
         if (message.equals("621.level")) {
