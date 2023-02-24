@@ -2,6 +2,8 @@
 
 一个基于[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)的机器人。
 
+Java版已停止更新，请移步C++版[shinxBot2](https://github.com/Jayfeather233/shinxbot2)。
+
 ### 它能做什么？
 
 - 在QQ群里玩UNO游戏。
